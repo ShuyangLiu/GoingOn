@@ -1,5 +1,0 @@
-csc210-proposal
-
-name: GoingOn
-
-target audience: UR students
