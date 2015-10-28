@@ -1,8 +1,11 @@
 # GoingOn
 
 Team Member:
+
 Shuyang Liu
+
 Geyang Yu
+
 Jie Deng
 
 ## What's GoingOn?
