@@ -7,25 +7,35 @@
   </head>
   <body>
     <h1>Welcome!</h1>
+    <div id="wrapper">
 
-    <a href="#individual">Sign in as an individual user</a>
+    <a href="#individual" class="SignIn">Sign in as an individual user</a>
 
     <div id="individual" class="lightbox" id="individual">
     		<p>User Name: </p><input id="nameBox" type="text" size="20"/>
-    		<p>Password: </p><input id="passwordBox" type="text" size="20"/>
+    		<p>Password: </p><input class="passwordBox" type="password" size="20"/>
     		<p></p>
     		<a href="#_">Sign In</a>
+    		<p></p>
+    		<a href="#_">Cancel</a>
     </div>
+
+    <p></p>
     
 
-    <a href="#organization">Sign in as an organization</a>
+    <a href="#organization" class="SignIn">Sign in as an organization</a>
     <div id="organization" class="lightbox" id="individual">
     		<p>Organization Name: </p><input id="nameBox" type="text" size="20"/>
-    		<p>Password: </p><input id="passwordBox" type="text" size="20"/>
+    		<p>Password: </p><input class="passwordBox" type="password" size="20"/>
     		<p></p>
     		<a href="#_">Sign In</a>
+    		<p></p>
+    		<a href="#_">Cancel</a>
     	</div>
-    <a href="#signup">Sign up</a>
+    	
+    <p></p>
+
+    <a href="#signup" class="SignUp">Sign up</a>
     <div id="signup" class="lightbox" id="individual">
     		<p>Email: </p><input id="emailBox" type="text" size="20"/>
     		<p>User Name: </p><input id="nameBox" type="text" size="20"/>
@@ -33,7 +43,11 @@
     		<p>Type</p><input id="typeBox" type="text" size="20"/>
     		<p></p>
     		<a href="#_">Sign Up</a>
+    		<p></p>
+    		<a href="#_">Cancel</a>
     	</div>
+
+    </div>
 
   </body>
 </html>
