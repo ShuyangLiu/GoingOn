@@ -1,5 +1,13 @@
 # GoingOn
 
+Team Member:
+
+Shuyang Liu
+
+Geyang Yu
+
+Jie Deng
+
 ## What's GoingOn?
 
 There is always a moment that you see many people gathering at a place but have no idea what they are doing. GoingOn app is trying to solve this problem! More specifically, GoingOn organizes events on campus and tells the user what is currently happening on campus according to the user's current location.  
