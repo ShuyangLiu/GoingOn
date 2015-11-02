@@ -3,8 +3,8 @@ html,body
 	font-family: 'Raleway', sans-serif;
 	padding: 0 2em;
   	font-size: 18px;
-  	background: #222;
-  	color: #aaa;
+  	background: #000000;
+  	color: #FFEB00;
   	text-align:center;
 }
 
@@ -19,9 +19,9 @@ a
 	padding: 10px;
 	padding-left: 20px;
 	padding-right: 20px; 
-	color: #222;
+	color: #000000;
 	font-size: 1.5em;
-	background: #aaa;
+	background: #FFEB00;
 	font-weight: 300;
 	transition: background-color 0.5s ease;
 }
@@ -33,14 +33,14 @@ a:link
 
 a:visited 
 { 
-	color: #222; 
+	color: #000000; 
 	text-decoration: none;
 }
 
 a:hover
 {
-	background: #222;
-	color: #aaa;
+	background: #000000;
+	color: #FFEB00;
 }
 
 
@@ -55,12 +55,12 @@ h1
 p 
 {
   margin: 1.5em 0;
-  color: #888;
+  color: #FFEB00;
 }
 
 input
 {
-	background-color: #aaa;
+	background-color: #FFEB00;
 	padding: 10px;
 }
 
@@ -90,10 +90,13 @@ input
 
 }
 
-.lightbox:target {
+.lightbox:target 
+{
 	/** Remove default browser outline */
 	outline: none;
 
 	/** Unhide lightbox **/
 	display: block;
 }
+
+
