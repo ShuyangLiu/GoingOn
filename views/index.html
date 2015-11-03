@@ -10,23 +10,10 @@
 
     <script type="text/javascript">
 
-    $(document).ready(function() 
+    $(document).ready(function()
     {
-    	//render the page differently according to localStorage
-    	if (localStorage['current_user'] === undefined || localStorage['current_user']=="") 
-    	{
-			//Already Logged in
-			$("#wrapper_2").hide();
-			$("#wrapper_1").show();
-		}
-		else
-		{
-			//Not Logged in
-			$("#wrapper_1").hide();
-			$("#wrapper_2").show();
-		}
 
-    	$(document).ajaxError(function() 
+    	$(document).ajaxError(function()
     	{
     		alert("Sorry, there was a ajax problem!");
   		});
@@ -40,69 +27,90 @@
 
   		});
 
-  		$("#individualSignIn").click(function()
-  		{
+      $("#signup").click(function()
+    {
+      console.log("signup button clicked!\n");
 
-  			console.log("clicked!\n");
+      $.ajax({
+        url:"/",
+        type: "POST",
+        dataType: "text",
+        data:{
+          username: $("#nameBox").val(),
+          password: $("#passwordBox").val(),
+          email: $("#emailBox").val(),
+          acount_type: $("#typeBox").val()
+        },
+        success: function()
+        {
+          $("#hidden").html("Acount created!");
+        },
+      });
+    });
 
-
-  			$.ajax(
-  			{
-  				url: "users/",
-      			type: "POST",
-      			dataType : "text",
-      			data : { name: $("#nameBox_individual").val(),
-			             password: $("#passwordBox").val()
-			           },
-			    success: function( data ) 
-			    {
-
-			    	if(data.name)
-			    	{
-			    		
-			    		$("#name").html(data.name);
-			    		$("#email").html(data.email);
-			    		$("#gender").html(data.gender);
-
-			    		localStorage['current_user'] = data.name;
-			    		// localStorage['user_email'] = data.email;
-			    		// localStorage['user_gender'] = data.gender;
-
-			    		$("#wrapper_2").show();
-			    		$("#wrapper_1").hide();
-			    	}
-			    	else
-			    	{
-			    		$("#hiddenMessage_individual").html("Incorrect Password or username");
-
-			    	}
-			    },
-  			});
-  		});
+  		// $("#individualSignIn").click(function()
+  		// {
+      //
+  		// 	console.log("clicked!\n");
+      //
+      //
+  		// 	$.ajax(
+  		// 	{
+  		// 		url: "/login",
+      // 			type: "POST",
+      // 			dataType : "text",
+      // 			data : { name: $("#nameBox_individual").val(),
+			//              password: $("#passwordBox").val()
+			//            },
+			//     success: function( data )
+			//     {
+      //
+			//     	if(data.name)
+			//     	{
+			//
+			//     		$("#name").html(data.name);
+			//     		$("#email").html(data.email);
+			//     		$("#gender").html(data.gender);
+      //
+			//     		localStorage['current_user'] = data.name;
+			//     		// localStorage['user_email'] = data.email;
+			//     		// localStorage['user_gender'] = data.gender;
+      //
+			//     		$("#wrapper_2").show();
+			//     		$("#wrapper_1").hide();
+			//     	}
+			//     	else
+			//     	{
+			//     		$("#hiddenMessage_individual").html("Incorrect Password or username");
+      //
+			//     	}
+			//     },
+  		// 	});
+  	//	});
     });
     </script>
 
   </head>
   <body>
     <h1>Welcome!</h1>
-    <div id="wrapper_1">
 
-    <a href="#individual" class="SignIn">Sign in as an individual user</a>
+
+    <!-- <a href="#individual" class="SignIn">Sign in as an individual user</a>
 
     <div id="individual" class="lightbox" id="individual">
     		<p>User Name: </p><input class="nameBox" id="nameBox_individual" type="text" size="20"/>
     		<p>Password: </p><input class="passwordBox" type="password" size="20"/>
     		<p></p>
-    		<a href="#_" id="individualSignIn">Sign In</a>
+    		<a href="" id="individualSignIn">Sign In</a>
     		<p></p>
     		<a href="#_">Cancel</a>
-    		<p id="hiddenMessage_individual"></p>
-    </div>
+    		<p id="hiddenMessage_individual"></p> -->
+
 
     <p></p>
-    
 
-    <a href="#organization" class="SignIn">Sign in as an organization</a>
+
+    <!-- <a href="#organization" class="SignIn">Sign in as an organization</a>
     <div id="organization" class="lightbox" id="individual">
     		<p>Organization Name: </p><input id="nameBox" type="text" size="20"/>
     		<p>Password: </p><input class="passwordBox" type="password" size="20"/>
@@ -111,8 +119,8 @@
     		<p></p>
     		<a href="#_">Cancel</a>
 
-    	</div>
-    	
+    	</div> -->
+
     <p></p>
 
     <a href="#signup" class="SignUp">Sign up</a>
@@ -122,20 +130,22 @@
     		<p>Password: </p><input class="passwordBox" type="password" size="20"/>
     		<p>Type</p><input id="typeBox" type="text" size="20"/>
     		<p></p>
-    		<a href="#_">Sign Up</a>
+    		<a href="" id="signup">Sign Up</a>
     		<p></p>
     		<a href="#_">Cancel</a>
     	</div>
 
     </div>
 
-    <div id="wrapper_2">
+    <p id="hidden"></p>
+
+    <!-- <div id="wrapper_2">
     	<p id="username"></p>
     	<p id="gender"></p>
     	<p id="email"></p>
     	<a href="#" id="logout">Log Out</a>
-    </div>
+    </div> -->
 
-    
+
   </body>
 </html>
