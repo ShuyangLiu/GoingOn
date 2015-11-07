@@ -1,16 +1,17 @@
 var mysql = require('mysql');
 var express = require('express');
-// var passport = require('passport');
-// var LocalStrategy = require('passport-local').Strategy;
-var app = express();
-var http = require('http').Server(app); // start an http server
 
+var app = express();
+var http = require('http').Server(app);
 
 var bodyParser = require('body-parser');
-app.use(bodyParser.json()); // support json encoded bodies
-app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ 
+    extended: true 
+}));
 
-
+// var passport = require('passport');
+// var LocalStrategy = require('passport-local').Strategy;
 
 // app.set('views', './views');
 
@@ -22,55 +23,49 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 app.use(express.static('views'));
 
+var config = require('./config');
 var connection = mysql.createConnection({
-  host     : 'localhost',
-  user     : 'root',
-  password : 'Lsy950621!',
-  database : 'goingon'
+    host     : config.database.host,
+    user     : config.database.user,
+    password : config.database.password,
+    database : config.database.database
 });
 connection.connect(function(err){
- if(!err)
- {
-     console.log("Database is connected ... \n\n");
- }
- else
- {
-     console.log("Error connecting database ... \n\n");
- }
- });
+    if ( !err ) {
+        console.log("[DEBUG] Database is connected...");
+    } else {
+        console.log("[DEBUG] Error connecting database...");
+    }
+});
 
 
- // app.post('/login', passport.authenticate('local-login', {
- //            successRedirect : '/profile', // redirect to the secure profile section
- //            failureRedirect : '/login', // redirect back to the signup page if there is an error
- //            failureFlash : true // allow flash messages
- // 	}),
- //        function(req, res) {
- //            console.log("hello");
- //
- //            if (req.body.remember) {
- //              req.session.cookie.maxAge = 1000 * 60 * 3;
- //            } else {
- //              req.session.cookie.expires = false;
- //            }
- //        res.redirect('/');
- //    });
+// app.post('/login', passport.authenticate('local-login', {
+//            successRedirect : '/profile', // redirect to the secure profile section
+//            failureRedirect : '/login', // redirect back to the signup page if there is an error
+//            failureFlash : true // allow flash messages
+// 	}),
+//        function(req, res) {
+//            console.log("hello");
+//
+//            if (req.body.remember) {
+//              req.session.cookie.maxAge = 1000 * 60 * 3;
+//            } else {
+//              req.session.cookie.expires = false;
+//            }
+//        res.redirect('/');
+//    });
 
- app.post("/",function(req,res)
+app.post("/",function(req,res)
 {
+    console.log("enter the function");
 
-  console.log("enter the function");
+    var body = req.body;
+    var username = body.username;
+    var password = body.password;
+    var email = body.email;
+    var accountType = body.acount_type;
 
-  var body = req.body;
-  var username = body.username;
-  var password = body.password;
-  var email = body.email;
-  var acount_type = body.acount_type;
-
-
-
-  if(acount_type=="individual")
-  {
+    if ( accountType == "individual" ) {
 
     console.log("type individual");
     var acount = {email:email,password:password,username:username,gender:'Female'};
@@ -78,15 +73,15 @@ connection.connect(function(err){
     connection.query("INSERT INTO user SET ?",acount,function(err,res){
         if(err) throw err;
       });
-  }
-  else
-  {
+    }
+    else
+    {
     var acount = {email:email,password:password,username:username,type:'art'};
 
     connection.query("INSERT INTO organization SET ?",acount,function(err,res){
         if(err) throw err;
       });
-  }
+    }
 })
 
 
@@ -145,6 +140,6 @@ connection.connect(function(err){
 //   console.log(rows[0]);
 // });
 
-http.listen(3000, function(){
-  console.log('listening on *:3000');
+http.listen(config.server.port, function(){
+  console.log('[DEBUG] Listening on *:' + config.server.port);
 });

@@ -1,0 +1,16 @@
+{
+    "name": "GoingOn",
+    "version": "0.0.1",
+    "author": "Shuyang Liu",
+    "repository" :
+    {
+        "type" : "git", 
+        "url" : "https://github.com/ShuyangLiu/GoingOn.git"
+    },
+    "dependencies": {
+        "mysql": "2.9.0",
+        "express": "4.13.3",
+        "body-parser": "1.14.1"
+    },
+    "license": "GPL-3.0"
+}
