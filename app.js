@@ -1,76 +1,95 @@
-var mysql = require('mysql');
-var express = require('express');
+var config          = require('./config'),
+    bodyParser      = require('body-parser'),
+    express         = require('express'),
+    methodOverride  = require('method-override'),
+    mysql           = require('mysql'),
+    path            = require('path'),
+    session         = require('express-session');
 
-var app = express();
-var http = require('http').Server(app);
+var app             = express();
+    http            = require('http').Server(app);
 
-var bodyParser = require('body-parser');
+/**
+ * Set up Application.
+ */
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ 
     extended: true 
 }));
 
-app.use(express.static('views'));
-app.use(express.static('assets'));
+app.use(session({
+    resave: false,
+    saveUninitialized: false,
+    secret: 'GoingOnSessionSecret'
+}));
 
-var config = require('./config');
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'ejs');
+
+console.log("[DEBUG] __dirname = ", __dirname);
+
+app.set('views', path.join(__dirname, '/views'));
+
+app.use('/assets', express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/views'));
+
+/**
+ * Get current time stamp.
+ * This function mainly used to generate logs.
+ */
+function getTimeNow() {
+    var currentdate = new Date(); 
+    var datetime    = currentdate.getFullYear() + '/'  
+                    + (currentdate.getMonth() + 1)  + '/' 
+                    + currentdate.getDate() + ' '
+                    + currentdate.getHours() + ':'  
+                    + currentdate.getMinutes() + ':' 
+                    + currentdate.getSeconds();
+    return datetime;
+}
+
+/**
+ * Database Connection for the application.
+ */
 var connection = mysql.createConnection({
     host: config.database.host,
     user: config.database.user,
     password: config.database.password,
     database: config.database.database
 });
-connection.connect(function(err){
+connection.connect(function(err) {
     if ( !err ) {
-        console.log("[DEBUG] Database is connected...");
+        console.log('[DEBUG] %s Database is connected...', getTimeNow());
     } else {
-        console.log("[DEBUG] Error connecting database...");
+        console.log('[DEBUG] %s Error connecting database...', getTimeNow());
     }
 });
 
+/**
+ * Handlers for the application.
+ */
+app.use(require('./controllers'));
 
-app.post("/",function(req,res)
-{
-    var body = req.body;
-    var username = body.username;
-    var password = body.password;
-    var email = body.email;
-    var accountType = body.account_type;
-
-    if ( accountType == "individual" ) {
-        console.log("[DEBUG] Current account type is individual");
-        
-        // TODO: Why the gender is female here?
-        var account = {
-            email: email,
-            password: password,
-            username: username,
-            gender: 'Female'
-        };
-
-        connection.query("INSERT INTO user SET ?", account, function(err, res){
-            if ( err )  {
-                throw err;
-            }
-        });
-    } else {
-        console.log("[DEBUG] Current account type isn't individual");
-        var account = {
-            email: email,
-            password: password,
-            username: username,
-            type: 'art'
-        };
-
-        // TODO: Merge the query sentences
-        connection.query("INSERT INTO user SET ?", account, function(err, res){
-            if ( err )  {
-                throw err;
-            }
-        });
+/**
+ * Error handler for the application.
+ */
+app.use(function(error, request, response, next){
+    if ( !module.parent ) {
+        console.error('[ERROR] %s', getTimeNow());
+        console.error(error.stack);
     }
-})
+    response.status(500).render('errors/5xx.html');
+});
 
-http.listen(config.server.port, function(){
-    console.log('[DEBUG] Listening on *:' + config.server.port);
+app.use(function(request, response, next){
+    response.status(404).render('errors/404.html');
+});
+
+/**
+ * The bootstrap of the application.
+ */
+var server = http.listen(config.server.port, function(){
+    var host = server.address().address,
+        port = server.address().port;
+    console.log('[DEBUG] %s Application is listening at http://%s:%s', getTimeNow(), host, port);
 });
