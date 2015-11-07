@@ -11,6 +11,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(express.static('views'));
+app.use(express.static('assets'));
 
 var config = require('./config');
 var connection = mysql.createConnection({
