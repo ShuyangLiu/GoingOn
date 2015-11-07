@@ -3,14 +3,14 @@
  * @type {Object}
  */
 var config = {
-    //MySQL Connection Settings
+    // MySQL Connection Settings
     database: {
         host     : 'localhost',
         user     : 'root',
         password : '',
         database : 'goingon'
     },
-    //server details
+    // Server Settings
     server: {
         port: '3000'
     }
