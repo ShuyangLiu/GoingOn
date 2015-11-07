@@ -7,7 +7,7 @@ var config = {
     database: {
         host     : 'localhost',
         user     : 'root',
-        password : '',
+        password : 'Lsy950621!',
         database : 'goingon'
     },
     // Server Settings
