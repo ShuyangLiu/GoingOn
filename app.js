@@ -57,30 +57,43 @@ connection.connect(function(err){
 
 app.post("/",function(req,res)
 {
-    console.log("enter the function");
-
     var body = req.body;
     var username = body.username;
     var password = body.password;
     var email = body.email;
-    var accountType = body.acount_type;
+    var accountType = body.account_type;
 
     if ( accountType == "individual" ) {
+        console.log("[DEBUG] Current account type is individual");
+        
+        // TODO: Why the gender is female here?
+        var account = {
+            email: email,
+            password: password,
+            username: username,
+            gender: 'Female'
+        };
 
-    console.log("type individual");
-    var acount = {email:email,password:password,username:username,gender:'Female'};
+        connection.query("INSERT INTO user SET ?", account, function(err, res){
+            if ( err )  {
+                throw err;
+            }
+        });
+    } else {
+        console.log("[DEBUG] Current account type isn't individual");
+        var account = {
+            email: email,
+            password: password,
+            username: username,
+            type: 'art'
+        };
 
-    connection.query("INSERT INTO user SET ?",acount,function(err,res){
-        if(err) throw err;
-      });
-    }
-    else
-    {
-    var acount = {email:email,password:password,username:username,type:'art'};
-
-    connection.query("INSERT INTO organization SET ?",acount,function(err,res){
-        if(err) throw err;
-      });
+        // TODO: Merge the query sentences
+        connection.query("INSERT INTO user SET ?", account, function(err, res){
+            if ( err )  {
+                throw err;
+            }
+        });
     }
 })
 
