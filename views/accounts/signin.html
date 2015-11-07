@@ -13,6 +13,7 @@
     <link rel="stylesheet" type="text/css" href="/assets/css/flat-ui.min.css" />
     <link rel="stylesheet" type="text/css" href="/assets/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/accounts/signin.css">
     <!-- JavaScript -->
     <script type="text/javascript" src="/assets/js/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
@@ -30,9 +31,94 @@
     <![endif]-->
 </head>
 <body>
-    <h1>Hello World # Sign In</h1>
+    <div id="content">
+        <div id="login">
+            <h2>Sign in</h2>
+            <div class="alert alert-error hide">Incorrect username or password.</div>
+            <% if (isLogout) { %>
+            <div class="alert alert-success">You are now logged out.</div>
+            <% } %>
+            <form id="login-form" method="POST" onsubmit="onSubmit(); return false;">
+                <p class="row-fluid">
+                    <label for="username">Username or Email</label>
+                    <input id="username" name="username" class="span12" type="text" maxlength="32" />
+                </p>
+                <p class="row-fluid">
+                    <label for="password">
+                        Password
+                        <span class="pull-right">
+                            <a href="/accounts/reset-password">
+                                Forgot password?
+                            </a>
+                        </span>
+                    </label>
+                    <input id="password" name="password" class="span12" type="password" maxlength="16" />
+                </p>
+                <p>
+                    <label for="remember-me">
+                        <input type="checkbox" /> Remember Me
+                    </label>
+                </p>
+                <p>
+                    <button class="btn btn-primary btn-block" type="submit">Sign in</button>
+                </p>
+            </form> <!-- #login-form -->
+        </div> <!-- #login -->
+        <p class="text-center">
+            Don't have an account?<br />
+            <a href="/accounts/signup">Create an account</a>
+        </p>
+    </div> <!-- #content -->
     <!-- Java Script -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script type="text/javascript" src="/assets/js/site.js"></script>
+    <script type="text/javascript">
+        function onSubmit() {
+            $('.alert-success').addClass('hide');
+            $('.alert-error').addClass('hide');
+            $('button[type=submit]').attr('disabled', 'disabled');
+            $('button[type=submit]').html('Please wait...');
+            
+            var username   = $('#username').val(),
+                password   = md5($('#password').val()),
+                rememberMe = $('input#remember-me').is(':checked');
+            
+            $('#password').val(password);
+            return doLoginAction(username, password, rememberMe);
+        };
+    </script>
+    <script type="text/javascript">
+        function doLoginAction(username, password, rememberMe) {
+            var postData = {
+                'username': username,
+                'password': password,
+                'rememberMe': rememberMe
+            };
+            
+            $.ajax({
+                type: 'POST',
+                url: '/accounts/signIn.action',
+                data: postData,
+                dataType: 'JSON',
+                success: function(result){
+                    return processLoginResult(result);
+                }
+            });
+        }
+    </script>
+    <script type="text/javascript">
+        function processLoginResult(result) {
+            if ( result['isSuccessful'] ) {
+                var forwardUrl = '<%= forwardUrl %>' || '/';
+                window.location.href = forwardUrl;
+            } else {
+                $('#password').val('');
+                $('.alert-error').removeClass('hide');
+            }
+
+            $('button[type=submit]').html('Sign in');
+            $('button[type=submit]').removeAttr('disabled');
+        }
+    </script>
 </body>
 </html>

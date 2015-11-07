@@ -5,10 +5,11 @@
 var config = {
     // MySQL Connection Settings
     database: {
-        host     : 'localhost',
-        user     : 'root',
-        password : '',
-        database : 'goingon'
+        connectionLimit : 1,
+        host            : 'localhost',
+        user            : 'root',
+        password        : '',
+        database        : 'goingon'
     },
     // Server Settings
     server: {
