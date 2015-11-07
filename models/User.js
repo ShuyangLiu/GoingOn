@@ -33,7 +33,7 @@ exports.getUserUsingUsername = function(username, callback) {
                 username: results[0]['username'],
                 password: results[0]['password'],
                 email: results[0]['email'],
-                userGroup: results[0]['user_group_id']
+                userGroupId: results[0]['user_group_id']
             }
         }
         callback(user);
@@ -55,7 +55,7 @@ exports.getUserUsingEmail = function(email, callback) {
                 username: results[0]['username'],
                 password: results[0]['password'],
                 email: results[0]['email'],
-                userGroup: results[0]['user_group_id']
+                userGroupId: results[0]['user_group_id']
             }
         }
         callback(user);

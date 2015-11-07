@@ -32,13 +32,13 @@
 </head>
 <body>
     <div id="content">
-        <div id="login">
+        <div id="sign-in">
             <h2>Sign in</h2>
             <div class="alert alert-error hide">Incorrect username or password.</div>
             <% if (isLogout) { %>
             <div class="alert alert-success">You are now logged out.</div>
             <% } %>
-            <form id="login-form" method="POST" onsubmit="onSubmit(); return false;">
+            <form id="sign-in-form" method="POST" onsubmit="onSubmit(); return false;">
                 <p class="row-fluid">
                     <label for="username">Username or Email</label>
                     <input id="username" name="username" class="span12" type="text" maxlength="32" />
@@ -62,8 +62,8 @@
                 <p>
                     <button class="btn btn-primary btn-block" type="submit">Sign in</button>
                 </p>
-            </form> <!-- #login-form -->
-        </div> <!-- #login -->
+            </form> <!-- #sign-in-form -->
+        </div> <!-- #sign-in -->
         <p class="text-center">
             Don't have an account?<br />
             <a href="/accounts/signup">Create an account</a>
@@ -84,11 +84,11 @@
                 rememberMe = $('input#remember-me').is(':checked');
             
             $('#password').val(password);
-            return doLoginAction(username, password, rememberMe);
+            return doSignInAction(username, password, rememberMe);
         };
     </script>
     <script type="text/javascript">
-        function doLoginAction(username, password, rememberMe) {
+        function doSignInAction(username, password, rememberMe) {
             var postData = {
                 'username': username,
                 'password': password,
@@ -101,13 +101,13 @@
                 data: postData,
                 dataType: 'JSON',
                 success: function(result){
-                    return processLoginResult(result);
+                    return processSignInResult(result);
                 }
             });
         }
     </script>
     <script type="text/javascript">
-        function processLoginResult(result) {
+        function processSignInResult(result) {
             if ( result['isSuccessful'] ) {
                 var forwardUrl = '<%= forwardUrl %>' || '/';
                 window.location.href = forwardUrl;

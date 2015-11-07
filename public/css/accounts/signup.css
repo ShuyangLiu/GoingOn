@@ -2,21 +2,21 @@ div#header {
 	border-top: 4px solid #1abc9c;
 }
 
-div#content div#sign-in {
+div#content div#sign-up {
 	margin: 20px auto 20px;
 	width: 400px;
 }
 
-div#content div#sign-in h2 {
+div#content div#sign-up h2 {
 	color: #1abc9c;
 }
 
-div#content div#sign-in div.alert {
+div#content div#sign-up div.alert {
 	margin-top: 20px;
 	font-size: 13px;
 }
 
-div#content div#sign-in form#sign-in-form {
+div#content div#sign-up form#sign-up-form {
 	background: #fff;
 	border: 1px solid #dedede;
 	color: #666;
@@ -28,8 +28,24 @@ div#content div#sign-in form#sign-in-form {
 	        border-radius: 4px;
 }
 
-div#content div#sign-in form#sign-in-form label {
+div#content div#sign-up form#sign-up-form label {
 	font-size: 12px;
+}
+
+div#content div#sign-up form#sign-up-form select#language-preference {
+	border: 2px solid #bdc3c7;
+	color: #34495e;
+	height: 41px;
+	-webkit-border-radius: 6px;
+	   -moz-border-radius: 6px;
+	        border-radius: 6px;
+	-webkit-transition: border .25s linear,color .25s linear;
+	   -moz-transition: border .25s linear,color .25s linear;
+	        transition: border .25s linear,color .25s linear;
+}
+
+div#content div#sign-up form#sign-up-form select#language-preference:focus {
+	border-color: #1abc9c
 }
 
 /* Smaller than standard 960 (devices and browsers) */
@@ -44,11 +60,11 @@ div#content div#sign-in form#sign-in-form label {
 
 /* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) */
 @media only screen and (max-width: 479px) {
-	div#content div#sign-in {
+	div#content div#sign-up {
 		width: 300px;
 	}
 
-	div#content div#sign-in form#sign-in-form {
+	div#content div#sign-up form#sign-up-form {
 		padding: 20px;
 	}
 }
