@@ -141,9 +141,48 @@
     <script type="text/javascript">
         function processSignUpResult(result) {
             if ( result['isSuccessful'] ) {
-                var forwardUrl = '<%= forwardUrl %>' || '/';
+                var forwardUrl    = '<%= forwardUrl %>' || '/';
                 window.location.href = forwardUrl;
             } else {
+                var errorMessage  = '',
+                    userGroup     = $('#user-group').val();
+
+                if ( result['isUsernameEmpty'] ) {
+                    errorMessage += '<br>';
+                } else if ( !result['isUsernameLegal'] ) {
+                    errorMessage += '<br>';
+                } else if ( result['isUsernameExists'] ) {
+                    errorMessage += '<br>';
+                }
+                if ( result['isEmailEmpty'] ) {
+                    errorMessage += '<br>';
+                } else if ( !result['isEmailLegal'] ) {
+                    errorMessage += '<br>';
+                } else if ( result['isEmailExists'] ) {
+                    errorMessage += '<br>';
+                }
+                if ( result['isPasswordEmpty'] ) {
+                    errorMessage += '<br>';
+                } else if ( !result['isPasswordLegal'] ) {
+                    errorMessage += '<br>';
+                }
+                if ( !result['isUserGroupLegal'] ) {
+                    errorMessage += '<br>';
+                }
+                if ( userGroup == 'personal' ) {
+                    if ( result['isGenderEmpty'] ) {
+                        errorMessage += '<br>';
+                    } else if ( !result['isGenderLegal'] ) {
+                        errorMessage += '<br>';
+                    }
+                } else {
+                    if ( result['isOrganizationTypeEmpty'] ) {
+                        errorMessage += '<br>';
+                    } else if ( !result['isOrganizationTypeLegal'] ) {
+                        errorMessage += '<br>';
+                    }
+                }
+                $('.alert-error').html(errorMessage);
                 $('.alert-error').removeClass('hide');
             }
 

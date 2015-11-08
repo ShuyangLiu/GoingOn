@@ -1,5 +1,6 @@
 var express     = require('express'),
     router      = express.Router(),
+    md5         = require('md5'),
     User        = require('../models/User'),
     UserGroup   = require('../models/UserGroup');
 
@@ -54,7 +55,7 @@ router.post('/signUp.action', function(request, response) {
         if ( result['isSuccessful'] ) {
             var user        = {
                 'username': username,
-                'password': password,
+                'password': md5(password),
                 'email': email,
                 'gender': gender,
                 'organizationType': organizationType,
