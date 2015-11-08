@@ -10,13 +10,13 @@ router.get('/signUp', function(request, response) {
         'forwardUrl': forwardUrl
     });
 });
-router.get('/signUp.action', function(request, response) {
-    var username            = request.query.username,
-        password            = request.query.password,
-        email               = request.query.email,
-        gender              = request.query.gender,
-        organizationType    = request.query.organizationType,
-        userGroupSlug       = request.query.userGroup,
+router.post('/signUp.action', function(request, response) {
+    var username            = request.body.username,
+        password            = request.body.password,
+        email               = request.body.email,
+        gender              = request.body.gender,
+        organizationType    = request.body.organizationType,
+        userGroupSlug       = request.body.userGroup,
         result              = {
             'isSuccessful': false,
             'isUsernameEmpty': !username,
@@ -37,50 +37,35 @@ router.get('/signUp.action', function(request, response) {
                               !result['isPasswordEmpty'] && result['isPasswordLegal'] &&
                               !result['isEmailEmpty']    && result['isEmailLegal'];
 
-    console.log("[DEBUG] username", username);
-    // Check if UserGroup is exists
-    UserGroup.getUserGroupUsingSlug(userGroupSlug, function(userGroup) {
-        if ( !userGroup || userGroup['userGroupSlug'] == 'administrator' ) {
-            result['isUserGroupLegal'] = false;
+    if ( result['isSuccessful'] ) {
+        var userGroup              = getUserGroupUsingSlug(userGroupSlug);
+        result['isUsernameExists'] = isUsernameExists(username);
+        result['isEmailExists']    = isEmailExists(email);
+        result['isUserGroupLegal'] = isUserGroupLegal(userGroup);
+
+        result['isSuccessful']    &= result['isUserGroupLegal'] && !result['isUsernameExists'] && 
+                                    !result['isEmailExists'];
+        if ( userGroup && userGroup['userGroupSlug'] == 'personal' ) {
+            result['isSuccessful'] &= !result['isGenderEmpty'] && result['isGenderLegal'];
+        } else if ( userGroup && userGroup['userGroupSlug'] == 'organzation' ) {
+            result['isSuccessful'] &= !result['isOrganizationTypeEmpty'] && 
+                                       result['isOrganizationTypeLegal'];
         }
+        if ( result['isSuccessful'] ) {
+            var user        = {
+                'username': username,
+                'password': password,
+                'email': email,
+                'gender': gender,
+                'organizationType': organizationType,
+                'userGroupId': userGroup['userGroupId']
+            };
 
-        // Check if Username is exists
-        User.getUserUsingUsername(username, function(user) {
-            if ( user ) {
-                result['isUsernameExists'] = true;
-            }
-
-            // Check if Email is exists
-            User.getUserUsingEmail(email, function(user) {
-                if ( user ) {
-                    result['isEmailExists'] = true;
-                }
-
-                result['isSuccessful'] &= result['isUserGroupLegal'] && !result['isUsernameExists'] && 
-                                         !result['isEmailExists'];
-                if ( userGroup && userGroup['userGroupSlug'] == 'personal' ) {
-                    result['isSuccessful'] &= !result['isGenderEmpty'] && result['isGenderLegal'];
-                } else if ( userGroup && userGroup['userGroupSlug'] == 'organzation' ) {
-                    result['isSuccessful'] &= !result['isOrganizationTypeEmpty'] && 
-                                               result['isOrganizationTypeLegal'];
-                }
-            });
-
-            if ( result['isSuccessful'] ) {
-                var user        = {
-                    'username': username,
-                    'password': password,
-                    'email': email,
-                    'gender': gender,
-                    'organizationType': organizationType,
-                    'userGroupId': userGroup['userGroupId']
-                };
-
-                User.createUser(user, function() { });
-            }
-            response.json(result);
-        });
-    });
+            var createdUser = User.createUser(user);
+            console.log("[INFO] An user is created at %s.", request.ip, createdUser);
+        }
+    }
+    response.json(result);
 });
 
 router.get('/signIn', function(request, response) {
@@ -101,34 +86,69 @@ router.post('/signIn.action', function(request, response) {
             'isPasswordEmpty': !password,
             'isAccountValid': false,
         };
-
-    User.getUserUsingUsername(username, function(user) {
-        if ( user && user.password == password ) {
-            result['isSuccessful'] = true;
-            result['isAccountValid'] = true;
-        }
-        response.json(result);
-    });
+    
+    var user = User.getUserUsingUsername(username);
+    if ( user && user.password == password ) {
+        result['isSuccessful'] = true;
+        result['isAccountValid'] = true;
+    }
+    response.json(result);
 });
 
 module.exports = router;
 
 function isUsernameLegal(username) {
+    return username.match(/^[A-Za-z][A-Za-z0-9_]{5,15}$/g) != null;
+}
+
+function isUsernameExists(username) {
+    var user = User.getUserUsingUsername(username);
+    if ( user ) {
+        return true;
+    } 
     return false;
 }
 
 function isPasswordLegal(password) {
-    return false;
+    var passwordLength = password.length;
+    return passwordLength >= 6 && passwordLength <= 16;
 }
 
 function isEmailLegal(email) {
-    return true;
+    var emailLength = email.length;
+    return emailLength <= 64 && 
+           email.match(/^[A-Za-z0-9\._-]+@[A-Za-z0-9_-]+\.[A-Za-z0-9\._-]+$/) != null;
 }
 
-function isGenderLegal(gender) {
+function isEmailExists(email) {
+    var user = User.getUserUsingEmail(email);
+    if ( user ) {
+        return true;
+    }
     return false;
 }
 
+function getUserGroupUsingSlug(userGroupSlug) {
+    var userGroup = UserGroup.getUserGroupUsingSlug(userGroupSlug);
+    if ( userGroup && userGroup['userGroupSlug'] != 'administrator' ) {
+        return userGroup;
+    }
+    return null;
+}
+
+function isUserGroupLegal(userGroup) {
+    if ( userGroup && userGroup['userGroupSlug'] != 'administrator' ) {
+        return true;
+    }
+    return false;
+}
+
+function isGenderLegal(gender) {
+    var genderOptions = ['Male', 'Female'];
+    return genderOptions.indexOf(gender) != -1;
+}
+
 function isOrganizationTypeLegal(organizationType) {
-    return true;
+    var organizationTypeOptions = [];
+    return organizationTypeOptions.indexOf(organizationType) != -1;
 }

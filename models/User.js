@@ -2,15 +2,14 @@
  * User Model.
  */
 
-var express = require('express'),
-    app     = express();
-
 /**
  * MUST BE REMOVED LATER!!
  */
-var mysql   = require('mysql'),
-    config  = require('../config');
-connection = mysql.createPool({
+/* BEGIN */
+var config      = require('../config'),
+    fibers      = require('fibers'),
+    mysql       = require('mysql'),
+    connection  = mysql.createPool({
         connectionLimit: config.database.connectionLimit,
         host: config.database.host,
         user: config.database.user,
@@ -18,8 +17,16 @@ connection = mysql.createPool({
         database: config.database.database
     });
 
-exports.getUserUsingUsername = function(username, callback) {
-    var user = null;
+app.use(function(request, response, next) {
+    fibers(function() {
+        next();
+    }).run();
+});
+/* END */
+
+exports.getUserUsingUsername = function(username) {
+    var user    = null,
+        fiber   = fibers.current;
 
     connection.query({
         sql: 'SELECT * FROM `go_users` WHERE `username` = ?',
@@ -36,12 +43,15 @@ exports.getUserUsingUsername = function(username, callback) {
                 userGroupId: results[0]['user_group_id']
             }
         }
-        callback(user);
+        fiber.run();
     });
+    fibers.yield();
+    return user;
 }
 
-exports.getUserUsingEmail = function(email, callback) {
-    var user = null;
+exports.getUserUsingEmail = function(email) {
+    var user = null,
+        fiber   = fibers.current;
 
     connection.query({
         sql: 'SELECT * FROM `go_users` WHERE `email` = ?',
@@ -58,24 +68,30 @@ exports.getUserUsingEmail = function(email, callback) {
                 userGroupId: results[0]['user_group_id']
             }
         }
-        callback(user);
+        fiber.run();
     });
+    fibers.yield();
+    return user;
 }
 
-exports.createUser = function(user, callback) {
+exports.createUser = function(user) {
+    var fiber   = fibers.current;
+
     connection.query({
-        sql: 'INSERT INTO `go_users` VALUES `username` = ?, `password` = ?, `email` = ?, `user_group_id` = ?',
+        sql: 'INSERT INTO `go_users` (`username`, `password`, `email`, `user_group_id`) VALUES (?, ?, ?, ?)',
         timeout: 30000,
     }, [
         user['username'], 
         user['password'], 
         user['email'], 
         user['userGroupId'], 
-    ], function (error, results) {
+    ], function (error, result) {
         if ( error ) {
             throw error;
         }
         user['uid'] = result.insertId;
-        callback(user);
+        fiber.run();
     });
+    fibers.yield();
+    return user;
 }

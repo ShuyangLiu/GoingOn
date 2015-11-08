@@ -2,15 +2,14 @@
  * UserGroup Model.
  */
 
-var express = require('express'),
-    app     = express();
-
 /**
  * MUST BE REMOVED LATER!!
  */
-var mysql   = require('mysql'),
-    config  = require('../config');
-connection = mysql.createPool({
+/* BEGIN */
+var config      = require('../config'),
+    fibers      = require('fibers'),
+    mysql       = require('mysql'),
+    connection  = mysql.createPool({
         connectionLimit: config.database.connectionLimit,
         host: config.database.host,
         user: config.database.user,
@@ -18,9 +17,17 @@ connection = mysql.createPool({
         database: config.database.database
     });
 
+app.use(function(request, response, next) {
+    fibers(function() {
+        next();
+    }).run();
+});
+/* END */
 
-exports.getUserGroupUsingSlug = function(userGroupSlug, callback) {
-    var userGroup = null;
+
+exports.getUserGroupUsingSlug = function(userGroupSlug) {
+    var userGroup   = null,
+        fiber       = fibers.current;
 
     connection.query({
         sql: 'SELECT * FROM `go_user_groups` WHERE `user_group_slug` = ?',
@@ -36,6 +43,8 @@ exports.getUserGroupUsingSlug = function(userGroupSlug, callback) {
                 userGroupName: results[0]['user_group_name']
             }
         }
-        callback(userGroup);
+        fiber.run();
     });
+    fibers.yield();
+    return userGroup;
 }

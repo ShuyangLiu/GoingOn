@@ -1,13 +1,14 @@
 var config          = require('./config'),
     bodyParser      = require('body-parser'),
     express         = require('express'),
+    globalFiber     = require('fibers'),
     methodOverride  = require('method-override'),
     mysql           = require('mysql'),
     path            = require('path'),
     session         = require('express-session');
 
-var app             = express();
-    http            = require('http').Server(app);
+app                 = express();
+var http            = require('http').Server(app);
 
 
 /**
@@ -82,11 +83,11 @@ var server = http.listen(config.server.port, function(){
  */
 function getTimeNow() {
     var currentdate = new Date(); 
-    var datetime    = currentdate.getFullYear() + '/'  
-                    + (currentdate.getMonth() + 1)  + '/' 
-                    + currentdate.getDate() + ' '
-                    + currentdate.getHours() + ':'  
-                    + currentdate.getMinutes() + ':' 
-                    + currentdate.getSeconds();
+    var datetime    = currentdate.getFullYear() + '/' + 
+                      (currentdate.getMonth() + 1)  + '/' +
+                      currentdate.getDate() + ' ' +
+                      currentdate.getHours() + ':' + 
+                      currentdate.getMinutes() + ':' + 
+                      currentdate.getSeconds();
     return datetime;
 }

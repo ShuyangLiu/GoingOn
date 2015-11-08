@@ -58,8 +58,8 @@
                 <p class="row-fluid">
                     <label for="gender">Gender</label>
                     <select id="gender" name="gender">
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
                     </select>
                 </p>
                 <p class="row-fluid hide">
@@ -108,9 +108,9 @@
             var username            = $('#username').val(),
                 password            = $('#password').val(),
                 email               = $('#email').val(),
-                userGroup           = $('#userGroup').val(),
+                userGroup           = $('#user-group').val(),
                 gender              = $('#gender').val(),
-                organizationType    = $('#organizationType').val();
+                organizationType    = $('#organization-type').val();
             
             return doSignUpAction(username, password, email, userGroup, gender, organizationType);
         };
@@ -144,11 +144,10 @@
                 var forwardUrl = '<%= forwardUrl %>' || '/';
                 window.location.href = forwardUrl;
             } else {
-                $('#password').val('');
                 $('.alert-error').removeClass('hide');
             }
 
-            $('button[type=submit]').html('Sign in');
+            $('button[type=submit]').html('Create Account');
             $('button[type=submit]').removeAttr('disabled');
         }
     </script>
