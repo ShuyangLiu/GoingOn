@@ -44,12 +44,12 @@ router.post('/signUp.action', function(request, response) {
         result['isEmailExists']    = isEmailExists(email);
         result['isUserGroupLegal'] = isUserGroupLegal(userGroup);
 
-        result['isSuccessful']    &= result['isUserGroupLegal'] && !result['isUsernameExists'] && 
+        result['isSuccessful']    &= result['isUserGroupLegal'] && !result['isUsernameExists'] &&
                                     !result['isEmailExists'];
         if ( userGroup && userGroup['userGroupSlug'] == 'personal' ) {
             result['isSuccessful'] &= !result['isGenderEmpty'] && result['isGenderLegal'];
         } else if ( userGroup && userGroup['userGroupSlug'] == 'organzation' ) {
-            result['isSuccessful'] &= !result['isOrganizationTypeEmpty'] && 
+            result['isSuccessful'] &= !result['isOrganizationTypeEmpty'] &&
                                        result['isOrganizationTypeLegal'];
         }
         if ( result['isSuccessful'] ) {
@@ -87,7 +87,7 @@ router.post('/signIn.action', function(request, response) {
             'isPasswordEmpty': !password,
             'isAccountValid': false,
         };
-    
+
     var user = User.getUserUsingUsername(username);
     if ( user && user.password == password ) {
         result['isSuccessful'] = true;
@@ -106,7 +106,7 @@ function isUsernameExists(username) {
     var user = User.getUserUsingUsername(username);
     if ( user ) {
         return true;
-    } 
+    }
     return false;
 }
 
@@ -117,7 +117,7 @@ function isPasswordLegal(password) {
 
 function isEmailLegal(email) {
     var emailLength = email.length;
-    return emailLength <= 64 && 
+    return emailLength <= 64 &&
            email.match(/^[A-Za-z0-9\._-]+@[A-Za-z0-9_-]+\.[A-Za-z0-9\._-]+$/) != null;
 }
 
@@ -150,6 +150,6 @@ function isGenderLegal(gender) {
 }
 
 function isOrganizationTypeLegal(organizationType) {
-    var organizationTypeOptions = [];
+    var organizationTypeOptions = ['Class Counsil','Engineering','Art and Music','Cultural'];
     return organizationTypeOptions.indexOf(organizationType) != -1;
 }

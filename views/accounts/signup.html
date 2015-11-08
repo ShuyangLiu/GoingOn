@@ -25,7 +25,7 @@
         <link rel="stylesheet" type="text/css" href="/assets/css/font-awesome-ie7.min.css" />
     <![endif]-->
     <!--[if lte IE 6]>
-        <script type="text/javascript"> 
+        <script type="text/javascript">
             window.location.href='<c:url value="/not-supported" />';
         </script>
     <![endif]-->
@@ -65,6 +65,10 @@
                 <p class="row-fluid hide">
                     <label for="organzation-type">Ogranization Type</label>
                     <select id="organzation-type" name="organzation-type">
+                      <option value="Class Council">Class Council</option>
+                      <option value="Engineering">Engineering</option>
+                      <option value="Cultural">Cultural</option>
+                      <option value="Art and Music">Art and Music</option>
                     </select>
                 </p>
                 <p>
@@ -104,14 +108,14 @@
             $('.alert-error').addClass('hide');
             $('button[type=submit]').attr('disabled', 'disabled');
             $('button[type=submit]').html('Please wait...');
-            
+
             var username            = $('#username').val(),
                 password            = $('#password').val(),
                 email               = $('#email').val(),
                 userGroup           = $('#user-group').val(),
                 gender              = $('#gender').val(),
                 organizationType    = $('#organization-type').val();
-            
+
             return doSignUpAction(username, password, email, userGroup, gender, organizationType);
         };
     </script>
@@ -126,7 +130,7 @@
                 'gender': gender,
                 'organizationType': organizationType
             };
-            
+
             $.ajax({
                 type: 'POST',
                 url: '/accounts/signUp.action',
@@ -148,38 +152,38 @@
                     userGroup     = $('#user-group').val();
 
                 if ( result['isUsernameEmpty'] ) {
-                    errorMessage += '<br>';
+                    errorMessage += 'Username should not be empty. <br>';
                 } else if ( !result['isUsernameLegal'] ) {
-                    errorMessage += '<br>';
+                    errorMessage += 'Username is not legal, plaese try another one. <br>';
                 } else if ( result['isUsernameExists'] ) {
-                    errorMessage += '<br>';
+                    errorMessage += 'Username already exist, please user other usernames<br>';
                 }
                 if ( result['isEmailEmpty'] ) {
-                    errorMessage += '<br>';
+                    errorMessage += 'Email should not be empty. <br>';
                 } else if ( !result['isEmailLegal'] ) {
-                    errorMessage += '<br>';
+                    errorMessage += 'Email format is not legal. <br>';
                 } else if ( result['isEmailExists'] ) {
-                    errorMessage += '<br>';
+                    errorMessage += 'This email already exist, please sign in. <br>';
                 }
                 if ( result['isPasswordEmpty'] ) {
-                    errorMessage += '<br>';
+                    errorMessage += 'Password should not be empty. <br>';
                 } else if ( !result['isPasswordLegal'] ) {
-                    errorMessage += '<br>';
+                    errorMessage += 'Password format is not legal, plaese try another one. <br>';
                 }
                 if ( !result['isUserGroupLegal'] ) {
                     errorMessage += '<br>';
                 }
                 if ( userGroup == 'personal' ) {
                     if ( result['isGenderEmpty'] ) {
-                        errorMessage += '<br>';
+                        errorMessage += 'Gender should not be empty. <br>';
                     } else if ( !result['isGenderLegal'] ) {
-                        errorMessage += '<br>';
+                        errorMessage += 'Gender format is not legal. <br>';
                     }
                 } else {
                     if ( result['isOrganizationTypeEmpty'] ) {
-                        errorMessage += '<br>';
+                        errorMessage += 'Organzation-type should not be empty. <br>';
                     } else if ( !result['isOrganizationTypeLegal'] ) {
-                        errorMessage += '<br>';
+                        errorMessage += 'Organzation-type is not legal. <br>';
                     }
                 }
                 $('.alert-error').html(errorMessage);
