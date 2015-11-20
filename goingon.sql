@@ -95,8 +95,7 @@ INSERT INTO `go_user_meta` (`meta_id`, `uid`, `meta_key`, `meta_value`) VALUES
 ALTER TABLE `go_users`
   ADD PRIMARY KEY (`uid`),
   ADD UNIQUE KEY `email` (`email`),
-  ADD UNIQUE KEY `username` (`username`),
-  ADD UNIQUE KEY `email_2` (`email`);
+  ADD UNIQUE KEY `username` (`username`);
 
 --
 -- Indexes for table `go_user_groups`
