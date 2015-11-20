@@ -5,7 +5,9 @@ var config          = require('./config'),
     methodOverride  = require('method-override'),
     mysql           = require('mysql'),
     path            = require('path'),
+    cookieParser    = require('cookie-parser');
     session         = require('express-session');
+
 
 app                 = express();
 var http            = require('http').Server(app);
@@ -33,14 +35,15 @@ connection.getConnection(function(error, connection) {
  * Set up Application.
  */
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ 
-    extended: true 
+app.use(bodyParser.urlencoded({
+    extended: true
 }));
 app.use(session({
     resave: false,
     saveUninitialized: false,
     secret: 'GoingOnSessionSecret'
 }));
+app.use(cookieParser());
 
 app.engine('html', require('ejs').renderFile);
 app.use('/assets', express.static(__dirname + '/public'));
@@ -82,12 +85,12 @@ var server = http.listen(config.server.port, function(){
  * This function mainly used to generate logs.
  */
 function getTimeNow() {
-    var currentdate = new Date(); 
-    var datetime    = currentdate.getFullYear() + '/' + 
+    var currentdate = new Date();
+    var datetime    = currentdate.getFullYear() + '/' +
                       (currentdate.getMonth() + 1)  + '/' +
                       currentdate.getDate() + ' ' +
-                      currentdate.getHours() + ':' + 
-                      currentdate.getMinutes() + ':' + 
+                      currentdate.getHours() + ':' +
+                      currentdate.getMinutes() + ':' +
                       currentdate.getSeconds();
     return datetime;
 }

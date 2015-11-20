@@ -81,6 +81,7 @@ router.get('/signIn', function(request, response) {
 router.post('/signIn.action', function(request, response) {
     var username            = request.body.username,
         password            = request.body.password,
+        rememberMe          = request.body.rememberMe,
         result              = {
             'isSuccessful': false,
             'isUsernameEmpty': !username,
@@ -89,9 +90,19 @@ router.post('/signIn.action', function(request, response) {
         };
 
     var user = User.getUserUsingUsername(username);
-    if ( user && user.password == password ) {
+
+    if ( user && user.password == password )
+    {
         result['isSuccessful'] = true;
         result['isAccountValid'] = true;
+
+        if(rememberMe)
+        {
+          //TODO:send a cookie here
+          var minute = 60 * 100000;
+          response.cookie('remember', 1, { maxAge: minute });
+        }
+
     }
     response.json(result);
 });

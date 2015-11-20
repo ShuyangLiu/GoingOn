@@ -2,9 +2,11 @@
  * The configuration of the application
  * @type {Object}
  */
-var config = {
+var config =
+{
     // MySQL Connection Settings
-    database: {
+    database:
+    {
         connectionLimit : 1,
         host            : 'localhost',
         user            : 'root',
@@ -12,7 +14,8 @@ var config = {
         database        : 'goingon'
     },
     // Server Settings
-    server: {
+    server:
+    {
         port: '3000'
     }
 }
