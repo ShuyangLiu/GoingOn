@@ -4,6 +4,9 @@ var express     = require('express'),
     User        = require('../models/User'),
     UserGroup   = require('../models/UserGroup');
 
+var session = require('express-session');
+var sess;
+
 router.get('/signUp', function(request, response) {
     var forwardUrl  = request.query.forwardUrl || '/';
 
@@ -78,6 +81,8 @@ router.get('/signIn', function(request, response) {
         'forwardUrl': forwardUrl
     });
 });
+
+
 router.post('/signIn.action', function(request, response) {
     var username            = request.body.username,
         password            = request.body.password,
@@ -98,14 +103,16 @@ router.post('/signIn.action', function(request, response) {
 
         if(rememberMe)
         {
-          //TODO:send a cookie here
-          var minute = 60 * 100000;
-          response.cookie('remember', 1, { maxAge: minute });
+          console.log('[DEBUG] remembered!');
+          sess=request.session;
+          sess.username = request.body.username;
+          console.log('[DEBUG]Session.username: '+sess.username);
         }
-
     }
     response.json(result);
 });
+
+
 
 module.exports = router;
 

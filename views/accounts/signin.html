@@ -109,7 +109,7 @@
     <script type="text/javascript">
         function processSignInResult(result) {
             if ( result['isSuccessful'] ) {
-                var forwardUrl = '<%= forwardUrl %>' || '/';
+                var forwardUrl = '/profile' || '/';
                 window.location.href = forwardUrl;
             } else {
                 $('#password').val('');
