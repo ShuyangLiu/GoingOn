@@ -170,6 +170,9 @@
                 } else if ( !result['isPasswordLegal'] ) {
                     errorMessage += 'Password format is not legal, plaese try another one. <br>';
                 }
+                if ( !result['isUserGroupLegal'] ) {
+                    errorMessage += '<br>';
+                }
                 if ( userGroup == 'personal' ) {
                     if ( result['isGenderEmpty'] ) {
                         errorMessage += 'Gender should not be empty. <br>';

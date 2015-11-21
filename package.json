@@ -4,7 +4,7 @@
     "author": "Shuyang Liu",
     "repository" :
     {
-        "type" : "git",
+        "type" : "git", 
         "url" : "https://github.com/ShuyangLiu/GoingOn.git"
     },
     "dependencies": {
@@ -15,7 +15,6 @@
         "fibers": "1.0.7",
         "md5": "2.0.0",
         "method-override": "2.3.5",
-        "cookie-parser": "~1.0.1",
         "mysql": "2.9.0"
     },
     "license": "GPL-3.0"

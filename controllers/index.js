@@ -8,6 +8,7 @@ var express = require('express'),
 var session = require('express-session');
 var sess;
 
+<<<<<<< HEAD
 router.use('/accounts', require('./accounts'));
 
 router.get('/', function(request, response)
@@ -25,9 +26,10 @@ router.get('/', function(request, response)
   {
     console.log('[DEBUG] Cannot find username in session redirecting to index.html');
 
+=======
+router.get('/', function(request, response) {
+>>>>>>> bcad49bc468c153221a7193a9f3a65e9be630b78
     response.render('index.html');
-  }
-
 });
 
 module.exports = router;
