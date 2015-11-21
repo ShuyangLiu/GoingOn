@@ -10,7 +10,6 @@ var config          = require('./config'),
 app                 = express();
 var http            = require('http').Server(app);
 
-
 /**
  * Database Connection for the application.
  */
@@ -51,59 +50,7 @@ app.set('views', path.join(__dirname, '/views'));
 /**
  * Handlers for the application.
  */
-//app.use(require('./controllers'));
-app.use('/accounts', require('./controllers/accounts'));
-
-app.get('/home',function(request,response){
-  sess=request.session;
-  console.log('[DEBUG] Get a /home request');
-  if(sess.username)
-  {
-    console.log('[DEBUG] found username in session: '+sess.username);
-    response.redirect('/profile');
-  }
-  else
-  {
-    console.log('[DEBUG] Cannot find username in session redirecting to index.html');
-    response.render('index.html');
-  }
-
-});
-
-app.get('/profile',function(request,response){
-    console.log('[DEBUG] get a profile request');
-    sess=request.session;
-    if(sess.username)
-    {
-      console.log('[DEBUG] from profile:Session.username: '+sess.username);
-      response.render('accounts/profile.html');
-      // response.write('<h1>Hello '+sess.username+'</h1>');
-      // response.end('<a href="/logout">Logout</a>');
-    }
-    else
-    {
-      response.redirect('/home');
-      // response.write('<h1>Please login first.</h1>');
-      // response.end('<a href="+">Login</a>');
-    }
-
-  });
-
-app.get('/logout',function(request,response){
-
-    console.log('[DEBUG] get a logout request!');
-    request.session.destroy(function(err){
-    if(err)
-    {
-      console.log(err);
-    }
-    else
-    {
-      response.redirect('/home');
-    }
-  });
-});
-
+app.use(require('./controllers'));
 
 /**
  * Error handler for the application.

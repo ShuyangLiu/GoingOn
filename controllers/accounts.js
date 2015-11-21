@@ -1,11 +1,9 @@
 var express     = require('express'),
     router      = express.Router(),
     md5         = require('md5'),
+    session     = require('express-session'),
     User        = require('../models/User'),
     UserGroup   = require('../models/UserGroup');
-
-var session = require('express-session');
-var sess;
 
 router.get('/signUp', function(request, response) {
     var forwardUrl  = request.query.forwardUrl || '/';
@@ -101,16 +99,45 @@ router.post('/signIn.action', function(request, response) {
 
         if(rememberMe)
         {
-          console.log('[DEBUG] remembered!');
-          sess=request.session;
-          sess.username = request.body.username;
-          console.log('[DEBUG]Session.username: '+sess.username);
+            var sess = request.session;
+            console.log('[DEBUG] remembered!');
+            sess.username = request.body.username;
+            console.log('[DEBUG]Session.username: '+sess.username);
         }
     }
     response.json(result);
 });
 
+router.get('/profile',function(request,response){
+    var sess = request.session;
+    console.log('[DEBUG] get a profile request');
+    if(sess.username)
+    {
+        console.log('[DEBUG] from profile:Session.username: '+sess.username);
+        response.render('accounts/profile.html');
+        // response.write('<h1>Hello '+sess.username+'</h1>');
+        // response.end('<a href="/logout">Logout</a>');
+    }
+    else
+    {
+        response.redirect('/home');
+        // response.write('<h1>Please login first.</h1>');
+        // response.end('<a href="+">Login</a>');
+    }
 
+  });
+
+router.get('/logout',function(request,response){
+    console.log('[DEBUG] get a logout request!');
+    request.session.destroy(function(err) {
+        if( err )
+        {
+            console.log("[ERROR]" + err);
+        } else {
+            response.redirect('/home');
+        }
+    });
+});
 
 module.exports = router;
 
