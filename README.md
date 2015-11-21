@@ -19,7 +19,3 @@ The target audience of GoingOn is college students for now. If possible, GoingOn
 * A map that shows the user's current location and events nearby.
 * Users can bookmark the events they interested. GoingOn can send a notification to the user before the event (email for the website version and notification dialog on mobile version).
 * Users can log in and add their interested fields so that GoingOn can send them information about events they might interested in.
-
-## Update Note (IMPORTANT)
-
-* Use `localhost:3000/home` to access the home page instead of `localhost:3000`
