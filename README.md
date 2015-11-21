@@ -19,3 +19,10 @@ The target audience of GoingOn is college students for now. If possible, GoingOn
 * A map that shows the user's current location and events nearby.
 * Users can bookmark the events they interested. GoingOn can send a notification to the user before the event (email for the website version and notification dialog on mobile version).
 * Users can log in and add their interested fields so that GoingOn can send them information about events they might interested in.
+
+## How to run it
+
+* Clone the files (you do not have it locally) from github using `git clone https://github.com/ShuyangLiu/GoingOn.git` or or pull (if you have cloned it before) using `git pull` in the project directory.
+* Set up your mysql database by sourcing the `goingon.sql` file and modifying the `config.js` file (you should have mysql installed before this step)
+* In `GoingOn/`directory, run the command `npm install` to install all of the dependencies (make sure you have mysql and node.js installed before this!).
+* Run `node app.js` to run the application
