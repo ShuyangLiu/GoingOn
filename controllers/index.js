@@ -15,10 +15,11 @@ app.get('/home', function(request, response) {
         console.log('[DEBUG] found username in session: ' + sess.username);
         response.redirect('/accounts/profile');
     } else {
-        console.log('[DEBUG] Cannot find username in session redirecting to index.html');
+        console.log('[DEBUG] Cannot find username in session redirecting to home.html');
+        response.render('misc/home.html');
     }
 
-    response.render('misc/home.html');
+    //response.render('misc/home.html');
 });
 
 module.exports = router;
