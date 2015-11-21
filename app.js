@@ -5,10 +5,6 @@ var config          = require('./config'),
     methodOverride  = require('method-override'),
     mysql           = require('mysql'),
     path            = require('path'),
-<<<<<<< HEAD
-    cookieParser    = require('cookie-parser'),
-=======
->>>>>>> bcad49bc468c153221a7193a9f3a65e9be630b78
     session         = require('express-session');
 
 app                 = express();

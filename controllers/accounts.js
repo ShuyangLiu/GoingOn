@@ -86,6 +86,7 @@ router.get('/signIn', function(request, response) {
 router.post('/signIn.action', function(request, response) {
     var username            = request.body.username,
         password            = request.body.password,
+        rememberMe          = request.body.rememberMe,
         result              = {
             'isSuccessful': false,
             'isUsernameEmpty': !username,
@@ -97,7 +98,6 @@ router.post('/signIn.action', function(request, response) {
     if ( user && user.password == password ) {
         result['isSuccessful'] = true;
         result['isAccountValid'] = true;
-<<<<<<< HEAD
 
         if(rememberMe)
         {
@@ -106,8 +106,6 @@ router.post('/signIn.action', function(request, response) {
           sess.username = request.body.username;
           console.log('[DEBUG]Session.username: '+sess.username);
         }
-=======
->>>>>>> bcad49bc468c153221a7193a9f3a65e9be630b78
     }
     response.json(result);
 });
