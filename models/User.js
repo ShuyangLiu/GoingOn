@@ -24,6 +24,7 @@ app.use(function(request, response, next) {
 });
 /* END */
 
+//Find a user by username
 exports.getUserUsingUsername = function(username) {
     var user    = null,
         fiber   = fibers.current;
@@ -49,6 +50,7 @@ exports.getUserUsingUsername = function(username) {
     return user;
 }
 
+//Find a user by email
 exports.getUserUsingEmail = function(email) {
     var user = null,
         fiber   = fibers.current;
@@ -74,6 +76,7 @@ exports.getUserUsingEmail = function(email) {
     return user;
 }
 
+//Create a new user
 exports.createUser = function(user) {
     var fiber   = fibers.current;
 
@@ -95,3 +98,24 @@ exports.createUser = function(user) {
     fibers.yield();
     return user;
 }
+
+//Update user information by replacing all the information
+exports.updateUser = function(user){
+    var fiber   = fibers.current;
+    connection.query({
+      sql: 'UPDATE `go_users` SET `username`=?, `password`=? WHERE `email`=?',
+      timeout: 30000,
+    }, [
+        user['username'],
+        user['password'],
+        user['email'],
+    ],function (error, result){
+        if ( error ) {
+          throw error;
+        }
+        console.log('[INFO] Changed ' + result.changedRows + ' rows');
+        fiber.run();
+      });
+    fibers.yield();
+    return user;
+  }

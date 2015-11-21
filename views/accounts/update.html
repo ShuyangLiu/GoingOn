@@ -13,7 +13,6 @@
     <link rel="stylesheet" type="text/css" href="/assets/css/flat-ui.min.css" />
     <link rel="stylesheet" type="text/css" href="/assets/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/accounts/signup.css">
     <!-- JavaScript -->
     <script type="text/javascript" src="/assets/js/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
@@ -32,28 +31,17 @@
 </head>
 <body>
     <div id="content">
-        <div id="sign-up">
-            <h2>Create Account</h2>
+        <div id="update">
+            <h2>Update Your Account</h2>
             <div class="alert alert-error hide"></div>
-            <form id="sign-up-form" method="POST" onsubmit="onSubmit(); return false;">
+            <form id="update-form" method="POST" onsubmit="onSubmit(); return false;">
                 <p class="row-fluid">
                     <label for="username">Username</label>
                     <input id="username" name="username" class="span12" type="text" maxlength="16" />
                 </p>
                 <p class="row-fluid">
-                    <label for="email">Email</label>
-                    <input id="email" name="email" class="span12" type="text" maxlength="64" />
-                </p>
-                <p class="row-fluid">
                     <label for="password">Password</label>
                     <input id="password" name="password" class="span12" type="password" maxlength="16" />
-                </p>
-                <p class="row-fluid">
-                    <label for="user-group">User Group</label>
-                    <select id="user-group" name="user-group">
-                        <option value="personal">Personal</option>
-                        <option value="ogranization">Organization</option>
-                    </select>
                 </p>
                 <p class="row-fluid">
                     <label for="gender">Gender</label>
@@ -62,46 +50,18 @@
                         <option value="Female">Female</option>
                     </select>
                 </p>
-                <p class="row-fluid hide">
-                    <label for="organzation-type">Ogranization Type</label>
-                    <select id="organzation-type" name="organzation-type">
-                      <option value="Class Council">Class Council</option>
-                      <option value="Engineering">Engineering</option>
-                      <option value="Cultural">Cultural</option>
-                      <option value="Art and Music">Art and Music</option>
-                    </select>
-                </p>
                 <p>
                     By clicking Create Account, I agree to the Terms of Service and Privacy Policy.
                 </p>
                 <p>
-                    <button class="btn btn-primary btn-block" type="submit">Create Account</button>
+                    <button class="btn btn-primary btn-block" type="submit">Update Account</button>
                 </p>
             </form> <!-- #sign-up-form -->
-        </c:otherwise>
-        </c:choose>
-        <p class="text-center">
-            Already have an account?<br />
-            <a href="/accounts/signin">Sign in</a>
-        </p>
         </div> <!-- #sign-up -->
     </div> <!-- #content -->
     <!-- Java Script -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script type="text/javascript" src="/assets/js/site.js"></script>
-    <script type="text/javascript">
-        $('#user-group').change(function() {
-            var userGroup = $('#user-group').val();
-
-            if ( userGroup == 'personal' ) {
-                $('#organzation-type').parent().addClass('hide');
-                $('#gender').parent().removeClass('hide');
-            } else if ( userGroup == 'ogranization' ) {
-                $('#gender').parent().addClass('hide');
-                $('#organzation-type').parent().removeClass('hide');
-            }
-        });
-    </script>
     <script type="text/javascript">
         function onSubmit() {
             $('.alert-success').addClass('hide');
@@ -111,83 +71,62 @@
 
             var username            = $('#username').val(),
                 password            = $('#password').val(),
-                email               = $('#email').val(),
-                userGroup           = $('#user-group').val(),
                 gender              = $('#gender').val(),
-                organizationType    = $('#organization-type').val();
-
-            return doSignUpAction(username, password, email, userGroup, gender, organizationType);
+            return doUpdateAction(username, password, gender);
         };
     </script>
     <script type="text/javascript">
-        function doSignUpAction(username, password, email, userGroup, gender, organizationType) {
+        function doUpdateAction(username, password, gender) {
+          console.log('[DEBUG] enter doUpdateAction');
             var postData = {
                 'username': username,
                 'password': password,
-                'email': email,
-                'userGroup': userGroup,
-                'email': email,
                 'gender': gender,
-                'organizationType': organizationType
             };
 
             $.ajax({
                 type: 'POST',
-                url: '/accounts/signUp.action',
+                url: '/accounts/update',
                 data: postData,
                 dataType: 'JSON',
                 success: function(result){
-                    return processSignUpResult(result);
+                  console.log('[DEBUG] Ajax success');
+                    return processUpdateResult(result);
                 }
             });
         }
     </script>
     <script type="text/javascript">
-        function processSignUpResult(result) {
+        function processUpdateResult(result) {
+          console.log('[DEBUG] enter processUpdateResult');
             if ( result['isSuccessful'] ) {
-                var forwardUrl    = '<%= forwardUrl %>' || '/';
+                console.log('[INFO] successfully update user information!');
+                var forwardUrl    = '/accounts/profile' || '/home';
                 window.location.href = forwardUrl;
             } else {
                 var errorMessage  = '',
-                    userGroup     = $('#user-group').val();
 
                 if ( result['isUsernameEmpty'] ) {
                     errorMessage += 'Username should not be empty. <br>';
                 } else if ( !result['isUsernameLegal'] ) {
                     errorMessage += 'Username is not legal, plaese try another one. <br>';
-                } else if ( result['isUsernameExists'] ) {
-                    errorMessage += 'Username already exist, please user other usernames<br>';
-                }
-                if ( result['isEmailEmpty'] ) {
-                    errorMessage += 'Email should not be empty. <br>';
-                } else if ( !result['isEmailLegal'] ) {
-                    errorMessage += 'Email format is not legal. <br>';
-                } else if ( result['isEmailExists'] ) {
-                    errorMessage += 'This email already exist, please sign in. <br>';
                 }
                 if ( result['isPasswordEmpty'] ) {
                     errorMessage += 'Password should not be empty. <br>';
                 } else if ( !result['isPasswordLegal'] ) {
                     errorMessage += 'Password format is not legal, plaese try another one. <br>';
                 }
-                if ( userGroup == 'personal' ) {
-                    if ( result['isGenderEmpty'] ) {
-                        errorMessage += 'Gender should not be empty. <br>';
-                    } else if ( !result['isGenderLegal'] ) {
-                        errorMessage += 'Gender format is not legal. <br>';
-                    }
-                } else {
-                    if ( result['isOrganizationTypeEmpty'] ) {
-                        errorMessage += 'Organzation-type should not be empty. <br>';
-                    } else if ( !result['isOrganizationTypeLegal'] ) {
-                        errorMessage += 'Organzation-type is not legal. <br>';
-                    }
+                if ( result['isGenderEmpty'] ) {
+                    errorMessage += 'Gender should not be empty. <br>';
+                } else if ( !result['isGenderLegal'] ) {
+                    errorMessage += 'Gender format is not legal. <br>';
                 }
+
                 $('.alert-error').html(errorMessage);
                 $('.alert-error').removeClass('hide');
             }
 
-            $('button[type=submit]').html('Create Account');
+            $('button[type=submit]').html('Update Account');
             $('button[type=submit]').removeAttr('disabled');
         }
     </script>

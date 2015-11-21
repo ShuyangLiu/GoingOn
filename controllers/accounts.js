@@ -97,14 +97,12 @@ router.post('/signIn.action', function(request, response) {
         result['isSuccessful'] = true;
         result['isAccountValid'] = true;
         var minute = 60*100000;
-
         if(rememberMe)
         {
             var sess = request.session;
-            console.log('[DEBUG] remembered!');
             sess.username = request.body.username;
             console.log('[DEBUG]Session.username: '+sess.username);
-            response.cookie('remember', 1, { maxAge: minute });
+            response.cookie('remember', user.email, { maxAge: minute });
         }
     }
     response.json(result);
@@ -117,14 +115,10 @@ router.get('/profile',function(request,response){
     {
         console.log('[DEBUG] from profile:Session.username: '+sess.username);
         response.render('accounts/profile.html');
-        // response.write('<h1>Hello '+sess.username+'</h1>');
-        // response.end('<a href="/logout">Logout</a>');
     }
     else
     {
         response.redirect('/home');
-        // response.write('<h1>Please login first.</h1>');
-        // response.end('<a href="+">Login</a>');
     }
 
   });
@@ -140,6 +134,63 @@ router.get('/logout',function(request,response){
             response.redirect('/home');
         }
     });
+});
+
+router.get('/update',function(request,response){
+    console.log('[DEBUG] get a update request!');
+    var sess = request.session;
+    //MUST logged in to update the user information
+    if(sess.username || request.cookies.remember)
+    {
+        console.log('[DEBUG] from update:Session.username: '+sess.username);
+        response.render('accounts/update.html');
+    }
+    else
+    {
+        response.redirect('/home');
+    }
+});
+
+router.post('/update',function(request,response){
+      console.log('[DEBUG] POST: enter update');
+      var username = request.body.username;
+      var password = request.body.password;
+      var gender   = request.body.gender;
+
+      var result       = {
+          'isSuccessful': false,
+          'isUsernameEmpty': !username,
+          'isUsernameExists': false,
+          'isUsernameLegal': isUsernameLegal(username),
+          'isPasswordEmpty': !password,
+          'isPasswordLegal': isPasswordLegal(password),
+          'isGenderEmpty': !gender,
+          'isGenderLegal': isGenderLegal(gender),
+      };
+
+      result['isUsernameExists'] = isUsernameExists(username);
+
+      result['isSuccessful'] = !result['isUsernameEmpty']&&
+                             result['isUsernameLegal']&&
+                             !result['isUsernameExists']&&
+                             !result['isPasswordEmpty']&&
+                             result['isPasswordLegal']&&
+                             !result['isGenderEmpty']&&
+                             result['isGenderLegal'];
+
+      if(result['isSuccessful'])
+      {
+        var user        = {
+            'username': username,
+            'password': md5(password),
+            'email': request.cookies.remember,
+            'gender': gender,
+        };
+
+        var updatedUser = User.updateUser(user);
+        console.log("[INFO] An user is updated at %s.", request.ip, updatedUser);
+      }
+      response.json(result);
 });
 
 module.exports = router;
