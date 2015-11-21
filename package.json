@@ -4,7 +4,7 @@
     "author": "Shuyang Liu",
     "repository" :
     {
-        "type" : "git", 
+        "type" : "git",
         "url" : "https://github.com/ShuyangLiu/GoingOn.git"
     },
     "dependencies": {

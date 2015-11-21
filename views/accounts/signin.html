@@ -78,11 +78,11 @@
             $('.alert-error').addClass('hide');
             $('button[type=submit]').attr('disabled', 'disabled');
             $('button[type=submit]').html('Please wait...');
-            
+
             var username   = $('#username').val(),
                 password   = md5($('#password').val()),
                 rememberMe = $('input#remember-me').is(':checked');
-            
+
             $('#password').val(password);
             return doSignInAction(username, password, rememberMe);
         };
@@ -94,7 +94,7 @@
                 'password': password,
                 'rememberMe': rememberMe
             };
-            
+
             $.ajax({
                 type: 'POST',
                 url: '/accounts/signIn.action',
