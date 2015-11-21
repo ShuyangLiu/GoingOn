@@ -81,10 +81,10 @@ exports.createUser = function(user) {
         sql: 'INSERT INTO `go_users` (`username`, `password`, `email`, `user_group_id`) VALUES (?, ?, ?, ?)',
         timeout: 30000,
     }, [
-        user['username'], 
-        user['password'], 
-        user['email'], 
-        user['userGroupId'], 
+        user['username'],
+        user['password'],
+        user['email'],
+        user['userGroupId'],
     ], function (error, result) {
         if ( error ) {
             throw error;

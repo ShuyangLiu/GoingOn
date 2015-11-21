@@ -8,7 +8,7 @@ var config = {
         connectionLimit : 1,
         host            : 'localhost',
         user            : 'root',
-        password        : '',
+        password        : 'Lsy950621!',
         database        : 'goingon'
     },
     // Server Settings
