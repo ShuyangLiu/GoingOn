@@ -96,6 +96,7 @@ router.post('/signIn.action', function(request, response) {
     if ( user && user.password == password ) {
         result['isSuccessful'] = true;
         result['isAccountValid'] = true;
+        var minute = 60*100000;
 
         if(rememberMe)
         {
@@ -103,6 +104,7 @@ router.post('/signIn.action', function(request, response) {
             console.log('[DEBUG] remembered!');
             sess.username = request.body.username;
             console.log('[DEBUG]Session.username: '+sess.username);
+            response.cookie('remember', 1, { maxAge: minute });
         }
     }
     response.json(result);
@@ -111,7 +113,7 @@ router.post('/signIn.action', function(request, response) {
 router.get('/profile',function(request,response){
     var sess = request.session;
     console.log('[DEBUG] get a profile request');
-    if(sess.username)
+    if(sess.username || request.cookies.remember)
     {
         console.log('[DEBUG] from profile:Session.username: '+sess.username);
         response.render('accounts/profile.html');
@@ -129,6 +131,7 @@ router.get('/profile',function(request,response){
 
 router.get('/logout',function(request,response){
     console.log('[DEBUG] get a logout request!');
+    response.clearCookie('remember');
     request.session.destroy(function(err) {
         if( err )
         {

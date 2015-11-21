@@ -5,6 +5,7 @@ var config          = require('./config'),
     methodOverride  = require('method-override'),
     mysql           = require('mysql'),
     path            = require('path'),
+    cookieParser    = require('cookie-parser'),
     session         = require('express-session');
 
 app                 = express();
@@ -35,6 +36,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+app.use(cookieParser());
 app.use(session({
     resave: true,
     saveUninitialized: false,

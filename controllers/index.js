@@ -11,7 +11,7 @@ app.get('/home', function(request, response) {
 
     console.log('[DEBUG] Get /home');
 
-    if( sess.username ) {
+    if( sess.username || request.cookies.remember) {
         console.log('[DEBUG] found username in session: ' + sess.username);
         response.redirect('/accounts/profile');
     } else {
