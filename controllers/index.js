@@ -13,7 +13,7 @@ app.get('/home', function(request, response) {
 
     if( sess.username ) {
         console.log('[DEBUG] found username in session: ' + sess.username);
-        response.redirect('/profile');
+        response.redirect('/accounts/profile');
     } else {
         console.log('[DEBUG] Cannot find username in session redirecting to index.html');
     }

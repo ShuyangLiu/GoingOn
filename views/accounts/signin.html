@@ -25,7 +25,7 @@
         <link rel="stylesheet" type="text/css" href="/assets/css/font-awesome-ie7.min.css" />
     <![endif]-->
     <!--[if lte IE 6]>
-        <script type="text/javascript"> 
+        <script type="text/javascript">
             window.location.href='/not-supported';
         </script>
     <![endif]-->
@@ -109,7 +109,7 @@
     <script type="text/javascript">
         function processSignInResult(result) {
             if ( result['isSuccessful'] ) {
-                var forwardUrl = '/profile' || '/';
+                var forwardUrl = '/accounts/profile' || '/home';
                 window.location.href = forwardUrl;
             } else {
                 $('#password').val('');
