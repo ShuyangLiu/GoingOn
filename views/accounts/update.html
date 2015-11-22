@@ -68,7 +68,7 @@
 
             var username            = $('#username').val(),
                 password            = $('#password').val(),
-                gender              = $('#gender').val(),
+                gender              = $('#gender').val();
             return doUpdateAction(username, password, gender);
         };
     </script>
@@ -83,11 +83,11 @@
 
             $.ajax({
                 type: 'POST',
-                url: '/accounts/update',
+                url: '/accounts/update.action',
                 data: postData,
                 dataType: 'JSON',
                 success: function(result){
-                  console.log('[DEBUG] Ajax success');
+                    console.log('[DEBUG] Ajax success');
                     return processUpdateResult(result);
                 }
             });
@@ -101,7 +101,7 @@
                 var forwardUrl    = '/accounts/profile' || '/home';
                 window.location.href = forwardUrl;
             } else {
-                var errorMessage  = '',
+                var errorMessage  = '';
 
                 if ( result['isUsernameEmpty'] ) {
                     errorMessage += 'Username should not be empty. <br>';

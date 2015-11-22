@@ -151,7 +151,7 @@ router.get('/update',function(request,response){
     }
 });
 
-router.post('/update',function(request,response){
+router.post('/update.action',function(request,response){
       console.log('[DEBUG] POST: enter update');
       var username = request.body.username;
       var password = request.body.password;
