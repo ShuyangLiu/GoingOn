@@ -74,10 +74,20 @@ router.get('/signIn', function(request, response) {
     var isLogout    = request.query.isLogout || false,
         forwardUrl  = request.query.forwardUrl || '/';
 
-    response.render('accounts/signin.html', {
-        'isLogout': isLogout,
-        'forwardUrl': forwardUrl
-    });
+    var sess = request.session;
+
+    if( sess.username || request.cookies.remember) //If already logged in
+    {
+            console.log('[DEBUG] found username in session: ' + sess.username);
+            response.redirect('/accounts/profile');
+    }
+    else
+    {
+      response.render('accounts/signin.html', {
+          'isLogout': isLogout,
+          'forwardUrl': forwardUrl
+      });
+    }
 });
 
 
