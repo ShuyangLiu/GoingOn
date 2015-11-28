@@ -2,6 +2,7 @@ var express     = require('express'),
     router      = express.Router(),
     md5         = require('md5'),
     session     = require('express-session'),
+    Activity    = require('../models/Activity'),
     User        = require('../models/User'),
     UserGroup   = require('../models/UserGroup');
 
@@ -194,6 +195,50 @@ router.get('/update',function(request,response){
     }
 });
 
+router.post('/NewEvent',function(request,response){
+  var sess = request.session;
+  console.log('[DEBUG] POST: enter NewEvent');
+  var activity_name         = request.body.activity_name;
+  var activity_type         = request.body.activity_type;
+  var activity_time         = request.body.activity_time;
+  var activity_location     = request.body.activity_location;
+  var activity_description  = request.body.activity_description;
+
+  var result = {
+    'isSuccessful'                : false,
+    'isActivityNameEmpty'         : !activity_name,
+    'isActivityTypeEmpty'         : !activity_type,
+    'isActivityTimeEmpty'         : !activity_time,
+    'isActivityLocationEmpty'     : !activity_location,
+    'isActivityDescriptionEmpty'  : !activity_description
+  };
+
+  result['isSuccessful'] = !result['isActivityDescriptionEmpty']&&
+                           !result['isActivityLocationEmpty']   &&
+                           !result['isActivityTimeEmpty']       &&
+                           !result['isActivityTypeEmpty']       &&
+                           !result['isActivityNameEmpty'];
+
+  if(result['isSuccessful'])
+  {
+    var NewEvent = {
+      'activity_name' : activity_name,
+      'activity_type' : activity_type,
+      'activity_time' : activity_time,
+      'activity_location' : activity_location,
+      'activity_description' : activity_description,
+      'activity_group' : sess.username
+    };
+
+    var new_event = Activity.createNewEvent(NewEvent);
+
+    console.log("[INFO] An event is inserted at %s.", request.ip, new_event);
+  }
+
+  response.json(result);
+
+});
+
 router.post('/update.action',function(request,response){
       console.log('[DEBUG] POST: enter update');
       var username = request.body.username;
@@ -201,33 +246,33 @@ router.post('/update.action',function(request,response){
       var gender   = request.body.gender;
 
       var result       = {
-          'isSuccessful': false,
-          'isUsernameEmpty': !username,
+          'isSuccessful'    : false,
+          'isUsernameEmpty' : !username,
           'isUsernameExists': false,
-          'isUsernameLegal': isUsernameLegal(username),
-          'isPasswordEmpty': !password,
-          'isPasswordLegal': isPasswordLegal(password),
-          'isGenderEmpty': !gender,
-          'isGenderLegal': isGenderLegal(gender),
+          'isUsernameLegal' : isUsernameLegal(username),
+          'isPasswordEmpty' : !password,
+          'isPasswordLegal' : isPasswordLegal(password),
+          'isGenderEmpty'   : !gender,
+          'isGenderLegal'   : isGenderLegal(gender),
       };
 
       result['isUsernameExists'] = isUsernameExists(username);
 
-      result['isSuccessful'] = !result['isUsernameEmpty']&&
-                             result['isUsernameLegal']&&
-                             !result['isUsernameExists']&&
-                             !result['isPasswordEmpty']&&
-                             result['isPasswordLegal']&&
-                             !result['isGenderEmpty']&&
-                             result['isGenderLegal'];
+      result['isSuccessful'] = !result['isUsernameEmpty'] &&
+                                result['isUsernameLegal'] &&
+                               !result['isUsernameExists']&&
+                               !result['isPasswordEmpty'] &&
+                                result['isPasswordLegal'] &&
+                               !result['isGenderEmpty']   &&
+                                result['isGenderLegal'];
 
       if(result['isSuccessful'])
       {
         var user        = {
             'username': username,
             'password': md5(password),
-            'email': request.cookies.remember,
-            'gender': gender,
+            'email'   : request.cookies.remember,
+            'gender'  : gender,
         };
 
         var updatedUser = User.updateUser(user);

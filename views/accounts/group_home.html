@@ -60,6 +60,7 @@
                 <h2>Tell others what's going to happen</h2>
           </div>
           <div class="content">
+            <div class="alert alert-error hide"></div>
             <form id="event-form" method="POST" onsubmit="onSubmit(); return false;">
               <p class="row-fluid">
                   <label for="activity_name">Activity Name</label>
@@ -79,7 +80,7 @@
               </p>
               <p class="row-fluid">
                   <label for="activity_description">Activity Description</label>
-                  <textarea id="activity_description" name="activity_description" class="span12" type="text"rows="4" cols="50">
+                  <textarea id="activity_description" name="activity_description" class="span12" type="text"rows="5" cols="50">
                   </textarea>
               </p>
               <p>
@@ -88,8 +89,72 @@
           </div>
         </div>
   </div>
-
   <script src="/assets/js/ui.js"></script>
   <script type="text/javascript" src="/assets/js/site.js"></script>
+  <script type="text/javascript">
+      function onSubmit()
+      {
+          $('.alert-success').addClass('hide');
+          $('.alert-error').addClass('hide');
+          $('button[type=submit]').attr('disabled', 'disabled');
+          $('button[type=submit]').html('Please wait...');
+
+          var activity_name         = $('#activity_name').val(),
+              activity_type         = $('#activity_type').val(),
+              activity_location     = $('#activity_location').val(),
+              activity_time         = $('#activity_time').val(),
+              activity_description  = $('#activity_description').val();
+
+          return doAddNewEventAction(activity_name,activity_type,activity_location,activity_time,activity_description);
+      };
+  </script>
+  <script type="text/javascript">
+      function doAddNewEventAction(activity_name,activity_type,activity_location,activity_time,activity_description) {
+          var postData = {
+              'activity_name': activity_name,
+              'activity_type': activity_type,
+              'activity_location': activity_location,
+              'activity_time': activity_time,
+              'activity_description': activity_description
+          };
+
+          $.ajax({
+              type: 'POST',
+              url: '/accounts/NewEvent',
+              data: postData,
+              dataType: 'JSON',
+              success: function(result){
+                  return processNewEventResult(result);
+              }
+          });
+      }
+  </script>
+  <script type="text/javascript">
+    function processNewEventResult(result) {
+      if (result['isSuccessful']){
+        alert('New Event Added!');
+      }else {
+        var errorMessage = '';
+        if(result['isActivityNameEmpty']){
+          errorMessage += 'Activity Name should not be empty! <br>';
+        }else if (result['isActivityTypeEmpty']) {
+          errorMessage += 'Activity Type should not be empty! <br>';
+        }else if (result['isActivityTimeEmpty']) {
+          errorMessage += 'Activity Time should not be empty! <br>';
+        }else if (result['isActivityLocationEmpty']) {
+          errorMessage += 'Activity Location should not be empty! <br>';
+        }else if (result['isActivityDescriptionEmpty']) {
+          errorMessage += 'Activity Description should not be empty! <br>';
+        }else {
+          errorMessage += 'Something goes wrong! <br>';
+        }
+        $('.alert-error').html(errorMessage);
+        $('.alert-error').removeClass('hide');
+      }
+
+      $('button[type=submit]').html('Create Account');
+      $('button[type=submit]').removeAttr('disabled');
+    }
+  </script>
 </body>
 </html>

@@ -64,10 +64,10 @@ exports.getUserUsingEmail = function(email) {
         }
         if ( results.length != 0 ) {
             user = {
-                username: results[0]['username'],
-                password: results[0]['password'],
-                email: results[0]['email'],
-                userGroupId: results[0]['user_group_id']
+                username    : results[0]['username'],
+                password    : results[0]['password'],
+                email       : results[0]['email'],
+                userGroupId : results[0]['user_group_id']
             }
         }
         fiber.run();
