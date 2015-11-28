@@ -52,7 +52,7 @@
                     <label for="user-group">User Group</label>
                     <select id="user-group" name="user-group">
                         <option value="personal">Personal</option>
-                        <option value="ogranization">Organization</option>
+                        <option value="organization">Organization</option>
                     </select>
                 </p>
                 <p class="row-fluid">
@@ -63,8 +63,8 @@
                     </select>
                 </p>
                 <p class="row-fluid hide">
-                    <label for="organzation-type">Ogranization Type</label>
-                    <select id="organzation-type" name="organzation-type">
+                    <label for="organization-type">Organization Type</label>
+                    <select id="organization-type" name="organization-type">
                       <option value="Class Council">Class Council</option>
                       <option value="Engineering">Engineering</option>
                       <option value="Cultural">Cultural</option>
@@ -94,11 +94,11 @@
             var userGroup = $('#user-group').val();
 
             if ( userGroup == 'personal' ) {
-                $('#organzation-type').parent().addClass('hide');
+                $('#organization-type').parent().addClass('hide');
                 $('#gender').parent().removeClass('hide');
-            } else if ( userGroup == 'ogranization' ) {
+            } else if ( userGroup == 'organization' ) {
                 $('#gender').parent().addClass('hide');
-                $('#organzation-type').parent().removeClass('hide');
+                $('#organization-type').parent().removeClass('hide');
             }
         });
     </script>
@@ -126,7 +126,6 @@
                 'password': password,
                 'email': email,
                 'userGroup': userGroup,
-                'email': email,
                 'gender': gender,
                 'organizationType': organizationType
             };

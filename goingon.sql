@@ -26,7 +26,7 @@ SET time_zone = "+00:00";
 -- 表的结构 `go_activitis`
 --
 
-CREATE TABLE IF NOT EXISTS `go_activitis` (
+CREATE TABLE IF NOT EXISTS `go_activities` (
   `activity_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `activity_name` varchar(32) NOT NULL,
   `activity_group` varchar(32) NOT NULL,
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `go_user_groups` (
 
 INSERT INTO `go_user_groups` (`user_group_id`, `user_group_slug`, `user_group_name`) VALUES
 (1, 'personal', 'Peronal'),
-(2, 'organzation', 'Organzation'),
+(2, 'organization', 'Organization'),
 (3, 'administrator', 'Administrator');
 
 -- --------------------------------------------------------

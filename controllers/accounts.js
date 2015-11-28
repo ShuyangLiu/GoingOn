@@ -35,25 +35,41 @@ router.post('/signUp.action', function(request, response) {
             'isOrganizationTypeLegal': isOrganizationTypeLegal(organizationType),
             'isUserGroupLegal': false
         };
+
+    console.log('[DEBUG]request.body.organizationType: '+request.body.organizationType);
+
     result['isSuccessful']  = !result['isUsernameEmpty'] && result['isUsernameLegal'] &&
                               !result['isPasswordEmpty'] && result['isPasswordLegal'] &&
                               !result['isEmailEmpty']    && result['isEmailLegal'];
 
-    if ( result['isSuccessful'] ) {
+    if ( result['isSuccessful'] )
+    {
         var userGroup              = getUserGroupUsingSlug(userGroupSlug);
         result['isUsernameExists'] = isUsernameExists(username);
         result['isEmailExists']    = isEmailExists(email);
         result['isUserGroupLegal'] = isUserGroupLegal(userGroup);
 
-        result['isSuccessful']    &= result['isUserGroupLegal'] && !result['isUsernameExists'] &&
+        result['isSuccessful']    &= result['isUserGroupLegal'] &&
+                                    !result['isUsernameExists'] &&
                                     !result['isEmailExists'];
-        if ( userGroup && userGroup['userGroupSlug'] == 'personal' ) {
-            result['isSuccessful'] &= !result['isGenderEmpty'] && result['isGenderLegal'];
-        } else if ( userGroup && userGroup['userGroupSlug'] == 'organzation' ) {
-            result['isSuccessful'] &= !result['isOrganizationTypeEmpty'] &&
-                                       result['isOrganizationTypeLegal'];
+
+        if ( userGroup && userGroup['userGroupSlug'] == 'personal' )
+        {
+          result['isSuccessful'] &= !result['isGenderEmpty'] &&
+                                     result['isGenderLegal'];
         }
-        if ( result['isSuccessful'] ) {
+        else if ( userGroup && userGroup['userGroupSlug'] == 'organization' )
+        {
+          result['isSuccessful'] &= !result['isOrganizationTypeEmpty'] &&
+                                     result['isOrganizationTypeLegal'];
+        }
+        else
+        {
+          result['isSuccessful'] = false;
+        }
+
+        if ( result['isSuccessful'] )
+        {
             var user        = {
                 'username': username,
                 'password': md5(password),
@@ -96,16 +112,19 @@ router.post('/signIn.action', function(request, response) {
         password            = request.body.password,
         rememberMe          = request.body.rememberMe,
         result              = {
-            'isSuccessful': false,
-            'isUsernameEmpty': !username,
-            'isPasswordEmpty': !password,
-            'isAccountValid': false,
+            'isSuccessful'    : false,
+            'isUsernameEmpty' : !username,
+            'isPasswordEmpty' : !password,
+            'isAccountValid'  : false,
+            'user_group_id'   : 0
         };
 
     var user = User.getUserUsingUsername(username);
     if ( user && user.password == password ) {
-        result['isSuccessful'] = true;
-        result['isAccountValid'] = true;
+        result['isSuccessful']    = true;
+        result['isAccountValid']  = true;
+        result['user_group_id']   = user.userGroupId;
+        console.log('[DEBUG]user_group_id: '+result['user_group_id']);
         var minute = 60*100000;
         if(rememberMe)
         {
@@ -132,6 +151,20 @@ router.get('/profile',function(request,response){
     }
 
   });
+
+router.get('/group_home',function(request,response){
+  var sess = request.session;
+  console.log('[DEBUG] get a group_home request');
+  if(sess.username || request.cookies.remember)
+  {
+      console.log('[DEBUG] from group_home:Session.username: '+sess.username);
+      response.render('accounts/group_home.html');
+  }
+  else
+  {
+      response.redirect('/home');
+  }
+});
 
 router.get('/logout',function(request,response){
     console.log('[DEBUG] get a logout request!');
@@ -251,12 +284,14 @@ function isUserGroupLegal(userGroup) {
     return false;
 }
 
-function isGenderLegal(gender) {
+function isGenderLegal(gender)
+{
     var genderOptions = ['Male', 'Female'];
     return genderOptions.indexOf(gender) != -1;
 }
 
-function isOrganizationTypeLegal(organizationType) {
-    var organizationTypeOptions = ['Class Counsil','Engineering','Art and Music','Cultural'];
+function isOrganizationTypeLegal(organizationType)
+{
+    var organizationTypeOptions = ['Class Council','Engineering','Art and Music','Cultural'];
     return organizationTypeOptions.indexOf(organizationType) != -1;
 }

@@ -90,8 +90,8 @@
     <script type="text/javascript">
         function doSignInAction(username, password, rememberMe) {
             var postData = {
-                'username': username,
-                'password': password,
+                'username'  : username,
+                'password'  : password,
                 'rememberMe': rememberMe
             };
 
@@ -108,10 +108,26 @@
     </script>
     <script type="text/javascript">
         function processSignInResult(result) {
-            if ( result['isSuccessful'] ) {
-                var forwardUrl = '/accounts/profile' || '/home';
-                window.location.href = forwardUrl;
-            } else {
+            if ( result['isSuccessful'] )
+            {
+              if(result['user_group_id']==1)
+              {
+                var forwardUrl = '/accounts/profile';
+              }
+              else if (result['user_group_id']==2)
+              {
+                var forwardUrl = '/accounts/group_home';
+              }
+              else
+              {
+                var forwardUrl = '/home';
+              }
+
+              window.location.href = forwardUrl;
+
+            }
+            else
+            {
                 $('#password').val('');
                 $('.alert-error').removeClass('hide');
             }

@@ -38,9 +38,9 @@ exports.getUserGroupUsingSlug = function(userGroupSlug) {
         }
         if ( results.length != 0 ) {
             userGroup = {
-                userGroupId: results[0]['user_group_id'],
-                userGroupSlug: results[0]['user_group_slug'],
-                userGroupName: results[0]['user_group_name']
+                userGroupId   : results[0]['user_group_id']   ,
+                userGroupSlug : results[0]['user_group_slug'] ,
+                userGroupName : results[0]['user_group_name']
             }
         }
         fiber.run();
