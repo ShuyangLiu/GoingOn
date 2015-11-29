@@ -144,7 +144,16 @@ router.get('/profile',function(request,response){
     if(sess.username || request.cookies.remember)
     {
         console.log('[DEBUG] from profile:Session.username: '+sess.username);
-        response.render('accounts/profile.html');
+        var user = User.getUserUsingUsername(sess.username);
+        if(user.userGroupId == 1)
+        {
+          response.render('accounts/profile.html');
+        }else if(user.userGroupId == 2){
+          response.render('accounts/group_home.html');
+        }
+        else {
+          response.redirect('/home');
+        }
     }
     else
     {
@@ -152,20 +161,6 @@ router.get('/profile',function(request,response){
     }
 
   });
-
-router.get('/group_home',function(request,response){
-  var sess = request.session;
-  console.log('[DEBUG] get a group_home request');
-  if(sess.username || request.cookies.remember)
-  {
-      console.log('[DEBUG] from group_home:Session.username: '+sess.username);
-      response.render('accounts/group_home.html');
-  }
-  else
-  {
-      response.redirect('/home');
-  }
-});
 
 router.get('/logout',function(request,response){
     console.log('[DEBUG] get a logout request!');
@@ -237,6 +232,21 @@ router.post('/NewEvent',function(request,response){
 
   response.json(result);
 
+});
+
+router.get('/about',function(request,response){
+  console.log('[DEBUG] get a about request!');
+  var sess = request.session;
+  //MUST logged in to see the about page
+  if(sess.username || request.cookies.remember)
+  {
+      console.log('[DEBUG] from about:Session.username: '+sess.username);
+      response.render('accounts/about.html');
+  }
+  else
+  {
+      response.redirect('/home');
+  }
 });
 
 router.post('/update.action',function(request,response){

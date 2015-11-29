@@ -108,26 +108,10 @@
     </script>
     <script type="text/javascript">
         function processSignInResult(result) {
-            if ( result['isSuccessful'] )
-            {
-              if(result['user_group_id']==1)
-              {
-                var forwardUrl = '/accounts/profile';
-              }
-              else if (result['user_group_id']==2)
-              {
-                var forwardUrl = '/accounts/group_home';
-              }
-              else
-              {
-                var forwardUrl = '/home';
-              }
-
+            if ( result['isSuccessful'] ){
+              var forwardUrl = '/accounts/profile';
               window.location.href = forwardUrl;
-
-            }
-            else
-            {
+            }else{
                 $('#password').val('');
                 $('.alert-error').removeClass('hide');
             }

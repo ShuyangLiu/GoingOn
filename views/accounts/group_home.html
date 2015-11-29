@@ -43,8 +43,8 @@
             <div class="pure-menu">
                 <a class="pure-menu-heading" href="#">GoingOn</a>
                 <ul class="pure-menu-list">
-                    <li class="pure-menu-item"><a href="/accounts/group_home" class="pure-menu-link">Home</a></li>
-                    <li class="pure-menu-item"><a href="#" class="pure-menu-link">About</a></li>
+                    <li class="pure-menu-item"><a href="/accounts/profile" class="pure-menu-link">Home</a></li>
+                    <li class="pure-menu-item"><a href="/accounts/about" class="pure-menu-link">About</a></li>
 
                     <li class="pure-menu-item" class="menu-item-divided pure-menu-selected">
                         <a href="/accounts/update" class="pure-menu-link">Update Profile</a>
@@ -84,7 +84,7 @@
                   </textarea>
               </p>
               <p>
-                  <button class="btn btn-primary btn-block" type="submit">Submit</button>
+                  <button class="btn btn-primary btn-block" type="submit">Post</button>
               </p>
           </div>
         </div>
@@ -133,6 +133,11 @@
     function processNewEventResult(result) {
       if (result['isSuccessful']){
         alert('New Event Added!');
+        $('#activity_name').val('');
+        $('#activity_type').val('');
+        $('#activity_time').val('');
+        $('#activity_location').val('');
+        $('#activity_description').val('');
       }else {
         var errorMessage = '';
         if(result['isActivityNameEmpty']){
@@ -152,7 +157,7 @@
         $('.alert-error').removeClass('hide');
       }
 
-      $('button[type=submit]').html('Create Account');
+      $('button[type=submit]').html('Post');
       $('button[type=submit]').removeAttr('disabled');
     }
   </script>
