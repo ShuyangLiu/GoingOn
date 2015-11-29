@@ -145,8 +145,7 @@ router.get('/profile',function(request,response){
     {
         console.log('[DEBUG] from profile:Session.username: '+sess.username);
         var user = User.getUserUsingUsername(sess.username);
-        if(user.userGroupId == 1)
-        {
+        if(user.userGroupId == 1){
           response.render('accounts/profile.html');
         }else if(user.userGroupId == 2){
           response.render('accounts/group_home.html');
@@ -251,6 +250,7 @@ router.get('/about',function(request,response){
 
 router.post('/update.action',function(request,response){
       console.log('[DEBUG] POST: enter update');
+      var sess = request.session;
       var username = request.body.username;
       var password = request.body.password;
       var gender   = request.body.gender;
@@ -278,14 +278,28 @@ router.post('/update.action',function(request,response){
 
       if(result['isSuccessful'])
       {
-        var user        = {
+        var user;
+        if(request.cookies.remember)
+        {
+            user        = {
+              'username': username,
+              'password': md5(password),
+              'email'   : request.cookies.remember,
+              'gender'  : gender,
+          };
+        }
+        else {
+          var old_user = User.getUserUsingUsername(sess.username);
+          user        = {
             'username': username,
             'password': md5(password),
-            'email'   : request.cookies.remember,
+            'email'   : old_user.email,
             'gender'  : gender,
-        };
+          };
+        }
 
         var updatedUser = User.updateUser(user);
+        sess.username = username;
         console.log("[INFO] An user is updated at %s.", request.ip, updatedUser);
       }
       response.json(result);
