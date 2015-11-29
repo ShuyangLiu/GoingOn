@@ -60,10 +60,24 @@
                 <h2>Tells you what's going on right now!</h2>
           </div>
           <div class="content">
-            <h2 class="content-subhead">Activity information goes to here!</h2>
-            <p>
-              activity information here
-            </p>
+            <%activities.forEach(function( activity ){%>
+              <h2 class="content-subhead"><%= activity.activity_name %></h2>
+              <p>
+                Time: <%= activity.activity_time %>
+              </p>
+              <p>
+                Type: <%= activity.activity_type %>
+              </p>
+              <p>
+                Host: <%= activity.activity_group %>
+              </p>
+              <p>
+                Location: <%= activity.activity_location %>
+              </p>
+              <p>
+                Description: <%= activity.activity_description %>
+              </p>
+            <% }); %>
           </div>
         </div>
   </div>

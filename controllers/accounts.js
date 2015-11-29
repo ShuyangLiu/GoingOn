@@ -146,7 +146,9 @@ router.get('/profile',function(request,response){
         console.log('[DEBUG] from profile:Session.username: '+sess.username);
         var user = User.getUserUsingUsername(sess.username);
         if(user.userGroupId == 1){
-          response.render('accounts/profile.html');
+           var allActivities = Activity.getAllActivities();
+           console.log('[DEBUG] all activities: '+allActivities);
+          response.render('accounts/profile.html',{'activities':allActivities});
         }else if(user.userGroupId == 2){
           response.render('accounts/group_home.html');
         }

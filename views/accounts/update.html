@@ -75,7 +75,7 @@
     </script>
     <script type="text/javascript">
         function doUpdateAction(username, password, gender) {
-            console.log('[DEBUG] enter doUpdateAction');
+
             var postData = {
                 'username': username,
                 'password': password,
@@ -88,7 +88,7 @@
                 data: postData,
                 dataType: 'JSON',
                 success: function(result){
-                    console.log('[DEBUG] Ajax success');
+
                     return processUpdateResult(result);
                 }
             });
@@ -96,7 +96,7 @@
     </script>
     <script type="text/javascript">
         function processUpdateResult(result) {
-          console.log('[DEBUG] enter processUpdateResult');
+
             if ( result['isSuccessful'] ) {
                 console.log('[INFO] successfully update user information!');
                 var forwardUrl    = '/accounts/profile' || '/home';
