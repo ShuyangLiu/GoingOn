@@ -14,6 +14,7 @@
     <link rel="stylesheet" type="text/css" href="/assets/css/flat-ui.min.css" />
     <link rel="stylesheet" type="text/css" href="/assets/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/accounts/profile.css">
     <link rel="stylesheet" href="/assets/css/side-menu.css">
     <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
     <!-- JavaScript -->
@@ -61,22 +62,24 @@
           </div>
           <div class="content">
             <%activities.forEach(function( activity ){%>
-              <h2 class="content-subhead"><%= activity.activity_name %></h2>
-              <p>
-                Time: <%= activity.activity_time %>
-              </p>
-              <p>
-                Type: <%= activity.activity_type %>
-              </p>
-              <p>
-                Host: <%= activity.activity_group %>
-              </p>
-              <p>
-                Location: <%= activity.activity_location %>
-              </p>
-              <p>
-                Description: <%= activity.activity_description %>
-              </p>
+              <div class="event">
+                <h2 class="content-subhead"><%= activity.activity_name %></h2>
+                <p>
+                  Time: <%= activity.activity_time %>
+                </p>
+                <p>
+                  Type: <%= activity.activity_type %>
+                </p>
+                <p>
+                  Host: <%= activity.activity_group %>
+                </p>
+                <p>
+                  Location: <%= activity.activity_location %>
+                </p>
+                <p>
+                  Description: <%= activity.activity_description %>
+                </p>
+            </div>
             <% }); %>
           </div>
         </div>

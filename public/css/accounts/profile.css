@@ -1,0 +1,15 @@
+.event{
+  margin: 10px;
+  background-color: #D9F0F6;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+  border-radius: 8px;
+}
+
+.content-subhead{
+  text-align: center;
+  background-color: #79F8BB;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
