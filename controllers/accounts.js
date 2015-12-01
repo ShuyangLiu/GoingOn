@@ -250,8 +250,13 @@ router.get('/about',function(request,response){
   //MUST logged in to see the about page
   if(sess.username || request.cookies.remember)
   {
-      console.log('[DEBUG] from about:Session.username: '+sess.username);
+    var user = User.getUserUsingUsername(sess.username);
+    if (user.userGroupId == 2) {
+      response.render('accounts/about.html',{'posted_event_link':'Posted Event'});
+    } else {
       response.render('accounts/about.html');
+    }
+      console.log('[DEBUG] from about:Session.username: '+sess.username);
   }
   else
   {

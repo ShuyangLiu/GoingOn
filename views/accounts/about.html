@@ -50,6 +50,10 @@
                         <a href="/accounts/update" class="pure-menu-link">Update Profile</a>
                     </li>
 
+                    <% if (posted_event_link) { %>
+                    <li class="pure-menu-item"><a href="/accounts/posted_event" class="pure-menu-link"><%=posted_event_link%></a></li>
+                    <% } %>
+
                     <li class="pure-menu-item"><a href="/accounts/logout" class="pure-menu-link">Log out</a></li>
                 </ul>
             </div>
