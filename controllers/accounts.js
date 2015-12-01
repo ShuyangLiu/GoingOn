@@ -155,13 +155,22 @@ router.get('/profile',function(request,response){
         else {
           response.redirect('/home');
         }
-    }
-    else
-    {
+    } else {
         response.redirect('/home');
     }
 
   });
+
+router.get('/posted_event',function(request,response){
+  var sess = request.session;
+  if(sess.username || request.cookies.remember)
+  {
+    var posted_event = Activity.getPostedActivities(sess.username);
+    response.render('accounts/posted_event.html',{activities:posted_event});
+  } else {
+    response.redirect('/home');
+  }
+});
 
 router.get('/logout',function(request,response){
     console.log('[DEBUG] get a logout request!');

@@ -83,3 +83,41 @@ exports.getAllActivities = function(){
   fibers.yield();
   return allActivities;
 }
+
+//return a list of all posted activities
+exports.getPostedActivities = function(username){
+  var fiber = fibers.current;
+  var allActivities = [];
+  var activity = null;
+  connection.query({
+    sql: 'SELECT * FROM `go_activities` WHERE `activity_group`=?',
+    timeout: 30000,
+  },[username],function(error,rows,fields){
+    if ( error )
+    {
+        throw error;
+    }
+
+    for (var i=0; i<rows.length; i++) {
+      console.log(i);
+      activity = {
+          activity_name: rows[i]['activity_name'],
+          activity_time: rows[i]['activity_time'],
+          activity_type: rows[i]['activity_type'],
+          activity_location: rows[i]['activity_location'],
+          activity_description: rows[i]['activity_description'],
+          activity_group: rows[i]['activity_group']
+      };
+      console.log('[DEBUG]activity: \n');
+      console.log(activity);
+      allActivities.push(activity);
+      console.log('[DEBUG]allActivities: \n');
+      console.log(allActivities);
+    }
+
+    fiber.run();
+
+  });
+  fibers.yield();
+  return allActivities;
+}
