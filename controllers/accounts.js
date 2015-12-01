@@ -254,7 +254,7 @@ router.get('/about',function(request,response){
     if (user.userGroupId == 2) {
       response.render('accounts/about.html',{'posted_event_link':'Posted Event'});
     } else {
-      response.render('accounts/about.html');
+      response.render('accounts/about.html',{'posted_event_link':'NULL'});
     }
       console.log('[DEBUG] from about:Session.username: '+sess.username);
   }
