@@ -46,13 +46,17 @@
                     <li class="pure-menu-item"><a href="/accounts/profile" class="pure-menu-link">Home</a></li>
                     <li class="pure-menu-item"><a href="/accounts/about" class="pure-menu-link">About</a></li>
 
-                    <li class="pure-menu-item" class="menu-item-divided pure-menu-selected">
-                        <a href="/accounts/update" class="pure-menu-link">Update Profile</a>
-                    </li>
-
                     <% if (posted_event_link=='Posted Event') { %>
                     <li class="pure-menu-item"><a href="/accounts/posted_event" class="pure-menu-link"><%=posted_event_link%></a></li>
                     <% } %>
+
+                    <% if (posted_event_link=='individual') { %>
+                    <li class="pure-menu-item"><a href="/accounts/bookmarks" class="pure-menu-link">Bookmarks</a></li>
+                    <% } %>
+
+                    <li class="pure-menu-item" class="menu-item-divided pure-menu-selected">
+                        <a href="/accounts/update" class="pure-menu-link">Update Profile</a>
+                    </li>
 
                     <li class="pure-menu-item"><a href="/accounts/logout" class="pure-menu-link">Log out</a></li>
                 </ul>

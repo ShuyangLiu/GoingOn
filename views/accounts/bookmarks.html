@@ -47,11 +47,11 @@
                     <li class="pure-menu-item"><a href="/accounts/profile" class="pure-menu-link">Home</a></li>
                     <li class="pure-menu-item"><a href="/accounts/about" class="pure-menu-link">About</a></li>
 
+                    <li class="pure-menu-item"><a href="/accounts/bookmarks" class="pure-menu-link">Bookmarks</a></li>
+
                     <li class="pure-menu-item" class="menu-item-divided pure-menu-selected">
                         <a href="/accounts/update" class="pure-menu-link">Update Profile</a>
                     </li>
-
-                    <li class="pure-menu-item"><a href="/accounts/bookmarks" class="pure-menu-link">Bookmarks</a></li>
 
                     <li class="pure-menu-item"><a href="/accounts/logout" class="pure-menu-link">Log out</a></li>
                 </ul>
@@ -82,55 +82,11 @@
                   Description: <%= activity.activity_description %>
                 </p>
 
-                <button id="bookmark_btn_<%= activity.activity_id %>" type="button" onclick="bookmark(<%= activity.activity_id %>)">
-                  <%= activity.bookmark %>
-                </button>
-
             </div>
             <% }); %>
           </div>
         </div>
   </div>
-
-  <script type="text/javascript">
-    function bookmark(activity_id)
-    {
-      //send a post request with activity id to the server
-      var postData = {
-        'activity_id' : activity_id
-      };
-
-      $.ajax({
-          type: 'POST',
-          url: '/accounts/bookmark.action',
-          data: postData,
-          dataType: 'JSON',
-          success: function(result){
-              return processBookmarkResult(result);
-          }
-      });
-    }
-  </script>
-
-  <script type="text/javascript">
-    function processBookmarkResult(result)
-    {
-      if ( result['isSuccessful'] )
-      {
-        var selector = '#bookmark_btn_'+result['activity_id'];
-
-        if(result['bookmark'])
-        {
-          $(selector).text('Unbookmark');
-          alert('successfully bookmarked!');
-        } else {
-          $(selector).text('Bookmark');
-          alert('successfully un-bookmarked!');
-        }
-      }
-    }
-  </script>
-
 
   <script src="/assets/js/ui.js"></script>
   <script type="text/javascript" src="/assets/js/site.js"></script>

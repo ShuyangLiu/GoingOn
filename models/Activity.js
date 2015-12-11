@@ -70,7 +70,7 @@ exports.user_activity_insert = function(user_activity){
 
 }
 
-//TODO: check if the user_activity exist
+//check if the user_activity exist
 exports.user_activity_exist = function(user_activity){
   var fiber = fibers.current;
   var userActivityExist = false;
@@ -98,7 +98,7 @@ exports.user_activity_exist = function(user_activity){
   return userActivityExist;
 }
 
-//TODO: delete a row of user_activity
+//delete a row of user_activity
 exports.user_activity_delete = function(user_activity){
   var fiber = fibers.current;
   connection.query({
@@ -117,6 +117,52 @@ exports.user_activity_delete = function(user_activity){
 
   fibers.yield();
   return user_activity;
+}
+
+//TODO: return a list of all bookmarked activity id
+exports.getBookmarkedActivityIds = function(user_id){
+  var fiber = fibers.current;
+  var allBookmarkedActivities = [];
+  connection.query({
+    sql: 'SELECT * FROM `go_user_activity` WHERE `uid` = ?',
+    timeout: 30000,
+  },[user_id],
+  function(error,rows,fields){
+    if ( error ){
+        throw error;
+    }
+    for (var i=0; i<rows.length; i++){
+      allBookmarkedActivities.push(rows[i]['activity_id']);
+    }
+    fiber.run();
+  });
+  fibers.yield();
+  return allBookmarkedActivities;
+}
+
+//TODO: return an activity object with given id number
+exports.getActivityById = function(activity_id){
+  var fiber = fibers.current;
+  var activity = null;
+  connection.query({
+    sql: 'SELECT * FROM `go_activities` WHERE `activity_id`=?',
+    timeout: 30000,
+  },[activity_id],function(error,rows,fields){
+    if ( error ){
+        throw error;
+    }
+    activity = {
+          activity_name         : rows[0]['activity_name'],
+          activity_time         : rows[0]['activity_time'],
+          activity_type         : rows[0]['activity_type'],
+          activity_location     : rows[0]['activity_location'],
+          activity_description  : rows[0]['activity_description'],
+          activity_group        : rows[0]['activity_group']
+      };
+    fiber.run();
+  });
+  fibers.yield();
+  return activity;
 }
 
 //return all activities in the Database

@@ -175,7 +175,7 @@ router.get('/profile',function(request,response){
            console.log('[DEBUG] [profile]:all activities: '+allActivities);
           response.render('accounts/profile.html',
           {
-            'activities':allActivities,
+            'activities':allActivities
           });
         }else if(user.userGroupId == 2){
           response.render('accounts/group_home.html');
@@ -317,7 +317,7 @@ router.get('/about',function(request,response){
     if (user.userGroupId == 2) {
       response.render('accounts/about.html',{'posted_event_link':'Posted Event'});
     } else {
-      response.render('accounts/about.html',{'posted_event_link':'NULL'});
+      response.render('accounts/about.html',{'posted_event_link':'individual'});
     }
       console.log('[DEBUG] from about:Session.username: '+sess.username);
   }
@@ -325,6 +325,33 @@ router.get('/about',function(request,response){
   {
       response.redirect('/home');
   }
+});
+
+router.get('/bookmarks',function(request,response){
+  console.log('[DEBUG] GET : enter /bookmarks');
+  var sess = request.session;
+  if(sess.username || request.cookies.remember)
+  {
+    var user = User.getUserUsingUsername(sess.username);
+    if (user.userGroupId == 1){
+      var activity_list = [];
+      var id_list = Activity.getBookmarkedActivityIds(user['uid']);
+      id_list.forEach(function( id ){
+        var activity = Activity.getActivityById( id );
+        activity_list.push(activity);
+      });
+
+      response.render('accounts/bookmarks.html',
+      {
+        'activities':activity_list
+      });
+    }else {
+      response.redirect('/home');
+    }
+  }else {
+    response.redirect('/home');
+  }
+
 });
 
 router.post('/update.action',function(request,response){
@@ -373,7 +400,7 @@ router.post('/update.action',function(request,response){
         }
 
         var updatedUser = User.updateUser(user);
-        sess.username = username;
+        sess.username = username;//also change the username in the session cookie
         console.log("[INFO] An user is updated at %s.", request.ip, updatedUser);
       }
       response.json(result);

@@ -102,8 +102,7 @@
                     errorMessage += 'Username should not be empty. <br>';
                 } else if ( !result['isUsernameLegal'] ) {
                     errorMessage += 'Username is not legal, plaese try another one. <br>';
-                }
-                if ( result['isPasswordEmpty'] ) {
+                } else if ( result['isPasswordEmpty'] ) {
                     errorMessage += 'Password should not be empty. <br>';
                 } else if ( !result['isPasswordLegal'] ) {
                     errorMessage += 'Password format is not legal, plaese try another one. <br>';
