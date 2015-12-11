@@ -56,7 +56,7 @@
                 </p>
                 <p>
                     <label for="remember-me">
-                        <input type="checkbox" /> Remember Me
+                        <input id="remember-me_checkbox" type="checkbox" /> Remember Me
                     </label>
                 </p>
                 <p>
@@ -81,7 +81,7 @@
 
             var username   = $('#username').val(),
                 password   = md5($('#password').val()),
-                rememberMe = $('input#remember-me').is(':checked');
+                rememberMe = $('#remember-me_checkbox').is(':checked');
 
             console.log('[DEBUG] rememberMe is '+rememberMe);
 

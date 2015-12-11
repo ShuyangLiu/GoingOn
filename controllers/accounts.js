@@ -127,11 +127,16 @@ router.post('/signIn.action', function(request, response) {
         result['isSuccessful']    = true;
         result['isAccountValid']  = true;
         result['user_group_id']   = user.userGroupId;
+
         console.log('[DEBUG]user_group_id: '+result['user_group_id']);
+        console.log('[DEBUG]rememberMe is '+rememberMe);
+
         var minute = 60*100000;
-        if(rememberMe == true)
+
+        if(rememberMe == 'true')
         {
-            response.cookie('remember', user.email, { maxAge: minute });
+          console.log('[DEBUG]rememberMe is true! Sending a cookie...');
+          response.cookie('remember', user.email, { maxAge: minute });
         }
 
         var sess = request.session;
@@ -147,7 +152,12 @@ router.get('/profile',function(request,response){
     if(sess.username || request.cookies.remember)
     {
         console.log('[DEBUG] from profile:Session.username: '+sess.username);
-        var user = User.getUserUsingUsername(sess.username);
+        var user = null;
+        if(sess.username!=null){
+          user = User.getUserUsingUsername(sess.username);
+        }else {
+          user = User.getUserUsingEmail(request.cookies.remember);
+        }
 
         var user_id = user['uid'];
 
@@ -195,7 +205,16 @@ router.get('/posted_event',function(request,response){
   var sess = request.session;
   if(sess.username || request.cookies.remember)
   {
-    var posted_event = Activity.getPostedActivities(sess.username);
+    var user = null;
+    var posted_event = null;
+
+    if(sess.username!=null){
+      posted_event = Activity.getPostedActivities(sess.username);
+    }else {
+      user = User.getUserUsingEmail(request.cookies.remember);
+      posted_event = Activity.getPostedActivities(user['username']);
+    }
+
     response.render('accounts/posted_event.html',{activities:posted_event});
   } else {
     response.redirect('/home');
@@ -204,7 +223,12 @@ router.get('/posted_event',function(request,response){
 
 router.post('/bookmark.action',function(request,response){
   var sess = request.session;
-  var user = User.getUserUsingUsername(sess.username);
+  var user = null;
+  if(sess.username!=null){
+    user = User.getUserUsingUsername(sess.username);
+  }else {
+    user = User.getUserUsingEmail(request.cookies.remember);
+  }
   var activity_id = request.body.activity_id;
   var user_id = user['uid'];
 
@@ -256,7 +280,7 @@ router.get('/update',function(request,response){
     //MUST logged in to update the user information
     if(sess.username || request.cookies.remember)
     {
-        console.log('[DEBUG] from update:Session.username: '+sess.username);
+        //console.log('[DEBUG] from update:Session.username: '+sess.username);
         response.render('accounts/update.html');
     }
     else
@@ -267,6 +291,12 @@ router.get('/update',function(request,response){
 
 router.post('/NewEvent',function(request,response){
   var sess = request.session;
+  var user = null;
+  if(sess.username!=null){
+    user = User.getUserUsingUsername(sess.username);
+  }else {
+    user = User.getUserUsingEmail(request.cookies.remember);
+  }
   console.log('[DEBUG] POST: enter NewEvent');
   var activity_name         = request.body.activity_name;
   var activity_type         = request.body.activity_type;
@@ -297,7 +327,7 @@ router.post('/NewEvent',function(request,response){
       'activity_time' : activity_time,
       'activity_location' : activity_location,
       'activity_description' : activity_description,
-      'activity_group' : sess.username
+      'activity_group' : user['username']
     };
 
     var new_event = Activity.createNewEvent(NewEvent);
@@ -315,7 +345,13 @@ router.get('/about',function(request,response){
   //MUST logged in to see the about page
   if(sess.username || request.cookies.remember)
   {
-    var user = User.getUserUsingUsername(sess.username);
+    var user = null;
+    if(sess.username!=null){
+      user = User.getUserUsingUsername(sess.username);
+    }else {
+      user = User.getUserUsingEmail(request.cookies.remember);
+    }
+
     if (user.userGroupId == 2) {
       response.render('accounts/about.html',{'posted_event_link':'Posted Event'});
     } else {
@@ -328,7 +364,6 @@ router.get('/about',function(request,response){
       response.redirect('/home');
   }
 });
-
 
 //go to the page of resetting password
 router.get('/reset-password',function(request,response){
@@ -370,7 +405,7 @@ router.post('/resetting.action',function(request,response){
   if (result['isSuccessful'] == true) {
     var u = {
       'username' : username,
-      'password' : '1234567890',
+      'password' : md5('1234567890'),
       'email'    : email
     }
 
@@ -414,7 +449,13 @@ router.get('/bookmarks',function(request,response){
   var sess = request.session;
   if(sess.username || request.cookies.remember)
   {
-    var user = User.getUserUsingUsername(sess.username);
+    var user = null;
+    if(sess.username!=null){
+      user = User.getUserUsingUsername(sess.username);
+    }else {
+      user = User.getUserUsingEmail(request.cookies.remember);
+    }
+
     if (user.userGroupId == 1){
       var activity_list = [];
       var id_list = Activity.getBookmarkedActivityIds(user['uid']);
@@ -446,7 +487,6 @@ router.post('/update.action',function(request,response){
       var result       = {
           'isSuccessful'    : false,
           'isUsernameEmpty' : !username,
-          'isUsernameExists': false,
           'isUsernameLegal' : isUsernameLegal(username),
           'isPasswordEmpty' : !password,
           'isPasswordLegal' : isPasswordLegal(password)
@@ -456,7 +496,6 @@ router.post('/update.action',function(request,response){
 
       result['isSuccessful'] = !result['isUsernameEmpty'] &&
                                 result['isUsernameLegal'] &&
-                               !result['isUsernameExists']&&
                                !result['isPasswordEmpty'] &&
                                 result['isPasswordLegal'];
 
