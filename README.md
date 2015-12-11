@@ -1,5 +1,12 @@
 # GoingOn
 
+## IMPORTANT Updates: New dependencies
+
+Please install the following package before running on your computer:
+Run `npm install `+ `<package_name>` on your terminal in the project directory
+
+* (12/11/2015) nodemailer 
+
 ## What's GoingOn?
 
 There is always a moment that you see many people gathering at a place but have no idea what they are doing. Goingon app is trying to solve this problem! More specifically, GoingOn organizes events on campus and tells the user what is currently happening on campus according to the user's current location.  
