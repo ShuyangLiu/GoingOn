@@ -127,13 +127,14 @@ router.post('/signIn.action', function(request, response) {
         result['user_group_id']   = user.userGroupId;
         console.log('[DEBUG]user_group_id: '+result['user_group_id']);
         var minute = 60*100000;
-        if(rememberMe)
+        if(rememberMe == true)
         {
-            var sess = request.session;
-            sess.username = request.body.username;
-            console.log('[DEBUG]Session.username: '+sess.username);
             response.cookie('remember', user.email, { maxAge: minute });
         }
+
+        var sess = request.session;
+        sess.username = request.body.username;
+        console.log('[DEBUG]Session.username: '+sess.username);
     }
     response.json(result);
 });
@@ -331,7 +332,7 @@ router.post('/update.action',function(request,response){
       var sess = request.session;
       var username = request.body.username;
       var password = request.body.password;
-      var gender   = request.body.gender;
+
 
       var result       = {
           'isSuccessful'    : false,
@@ -339,9 +340,7 @@ router.post('/update.action',function(request,response){
           'isUsernameExists': false,
           'isUsernameLegal' : isUsernameLegal(username),
           'isPasswordEmpty' : !password,
-          'isPasswordLegal' : isPasswordLegal(password),
-          'isGenderEmpty'   : !gender,
-          'isGenderLegal'   : isGenderLegal(gender),
+          'isPasswordLegal' : isPasswordLegal(password)
       };
 
       result['isUsernameExists'] = isUsernameExists(username);
@@ -350,9 +349,8 @@ router.post('/update.action',function(request,response){
                                 result['isUsernameLegal'] &&
                                !result['isUsernameExists']&&
                                !result['isPasswordEmpty'] &&
-                                result['isPasswordLegal'] &&
-                               !result['isGenderEmpty']   &&
-                                result['isGenderLegal'];
+                                result['isPasswordLegal'];
+
 
       if(result['isSuccessful'])
       {
@@ -362,8 +360,7 @@ router.post('/update.action',function(request,response){
             user        = {
               'username': username,
               'password': md5(password),
-              'email'   : request.cookies.remember,
-              'gender'  : gender,
+              'email'   : request.cookies.remember
           };
         }
         else {
@@ -371,8 +368,7 @@ router.post('/update.action',function(request,response){
           user        = {
             'username': username,
             'password': md5(password),
-            'email'   : old_user.email,
-            'gender'  : gender,
+            'email'   : old_user.email
           };
         }
 

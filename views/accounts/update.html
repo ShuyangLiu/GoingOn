@@ -44,13 +44,7 @@
                     <label for="password">Password</label>
                     <input id="password" name="password" class="span12" type="password" maxlength="16" />
                 </p>
-                <p class="row-fluid">
-                    <label for="gender">Gender</label>
-                    <select id="gender" name="gender">
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                    </select>
-                </p>
+
                 <p>
                     <button class="btn btn-primary btn-block" type="submit">Update Account</button>
                 </p>
@@ -68,18 +62,17 @@
             $('button[type=submit]').html('Please wait...');
 
             var username            = $('#username').val(),
-                password            = $('#password').val(),
-                gender              = $('#gender').val();
-            return doUpdateAction(username, password, gender);
+                password            = $('#password').val();
+
+            return doUpdateAction(username, password);
         };
     </script>
     <script type="text/javascript">
-        function doUpdateAction(username, password, gender) {
+        function doUpdateAction(username, password) {
 
             var postData = {
                 'username': username,
-                'password': password,
-                'gender': gender,
+                'password': password
             };
 
             $.ajax({
@@ -99,6 +92,7 @@
 
             if ( result['isSuccessful'] ) {
                 console.log('[INFO] successfully update user information!');
+                alert('successfully update user information!');
                 var forwardUrl    = '/accounts/profile' || '/home';
                 window.location.href = forwardUrl;
             } else {
@@ -113,11 +107,6 @@
                     errorMessage += 'Password should not be empty. <br>';
                 } else if ( !result['isPasswordLegal'] ) {
                     errorMessage += 'Password format is not legal, plaese try another one. <br>';
-                }
-                if ( result['isGenderEmpty'] ) {
-                    errorMessage += 'Gender should not be empty. <br>';
-                } else if ( !result['isGenderLegal'] ) {
-                    errorMessage += 'Gender format is not legal. <br>';
                 }
 
                 $('.alert-error').html(errorMessage);

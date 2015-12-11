@@ -83,6 +83,8 @@
                 password   = md5($('#password').val()),
                 rememberMe = $('input#remember-me').is(':checked');
 
+            console.log('[DEBUG] rememberMe is '+rememberMe);
+
             $('#password').val(password);
             return doSignInAction(username, password, rememberMe);
         };
