@@ -8,6 +8,8 @@ var config          = require('./config'),
     cookieParser    = require('cookie-parser'),
     session         = require('express-session');
 
+var nodemailer      = require('nodemailer');
+
 app                 = express();
 var http            = require('http').Server(app);
 

@@ -5,6 +5,8 @@ var express     = require('express'),
     Activity    = require('../models/Activity'),
     User        = require('../models/User'),
     UserGroup   = require('../models/UserGroup');
+var nodemailer  = require('nodemailer');
+
 
 router.get('/signUp', function(request, response) {
     var forwardUrl  = request.query.forwardUrl || '/';
@@ -326,6 +328,85 @@ router.get('/about',function(request,response){
       response.redirect('/home');
   }
 });
+
+
+//go to the page of resetting password
+router.get('/reset-password',function(request,response){
+  var sess = request.session;
+  if(sess.username || request.cookies.remember)
+  {
+    response.redirect('/home');
+  } else {
+    response.render('accounts/resetPassword.html');
+  }
+});
+
+//verify if the username match with the email
+router.post('/resetting.action',function(request,response){
+  var username = request.body.username;
+  var email = request.body.email;
+
+  var result = {
+    'isSuccessful'          : false,
+    'isUserExist'           : false,
+    'isUsernameEmailMatch'  : false
+  }
+
+  var user = User.getUserUsingUsername(username);
+
+  if(user == null){
+    result['isUserExist'] = false;
+  } else if(user['email']!=email){
+    result['isUsernameEmailMatch' ] = false;
+  } else {
+    result['isUserExist'] = true;
+    result['isUsernameEmailMatch'] = true;
+  }
+
+  result['isSuccessful'] = result['isUserExist'] &&
+                            result['isUsernameEmailMatch'];
+
+  if (result['isSuccessful'] == true) {
+    var u = {
+      'username' : username,
+      'password' : '1234567890',
+      'email'    : email
+    }
+
+    u = User.updateUser(u);
+
+    /**
+     * Email Connection for the application.
+     */
+    var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'liushuyang2009@gmail.com', // email id
+                pass: 'liushuyang950621' // password
+            }
+        });
+
+    var mailOptions = {
+        from: 'ShuyangLiu of GoingOn  <liushuyang2009@gmail.com>', // sender address
+        to: email, // list of receivers
+        subject: '[GoingOn] Your Password is Resetted', // Subject line
+        text: 'Hello, Your Password is resetted to 1234567890 now, please update your password after log in', // plaintext body
+        html: '<p>Hello, Your Password is resetted to 1234567890 now, please update your password after log in</p><b>Shuyang Liu | GoingOn Team</b>' // html body
+    };
+
+    // send mail with defined transport object
+    transporter.sendMail(mailOptions, function(error, info){
+        if(error){
+            return console.log(error);
+        }
+        console.log('[DEBUG] Message sent: ' + info.response);
+    });
+
+  }
+
+  response.json(result);
+});
+
 
 router.get('/bookmarks',function(request,response){
   console.log('[DEBUG] GET : enter /bookmarks');
