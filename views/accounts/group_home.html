@@ -15,11 +15,20 @@
     <link rel="stylesheet" type="text/css" href="/assets/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/side-menu.css">
+    <link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
     <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
     <!-- JavaScript -->
     <script type="text/javascript" src="/assets/js/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/assets/js/md5.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+    <script>
+       $(function() {
+          $( "#activity_time" ).datepicker();
+       });
+    </script>
+
     <!--[if lte IE 9]>
         <script type="text/javascript" src="/assets/js/jquery.placeholder.min.js"></script>
     <![endif]-->
@@ -74,7 +83,7 @@
                   <input id="activity_type" name="activity_type" class="span12" type="text" maxlength="32" />
               </p>
               <p class="row-fluid">
-                  <label for="activity_time">Activity Time</label>
+                  <label for="activity_time">Activity Date</label>
                   <input id="activity_time" name="activity_time" class="span12" type="text" maxlength="32" />
               </p>
               <p class="row-fluid">
