@@ -357,6 +357,7 @@ router.post('/resetting.action',function(request,response){
   if(user == null){
     result['isUserExist'] = false;
   } else if(user['email']!=email){
+    result['isUserExist'] = true;
     result['isUsernameEmailMatch' ] = false;
   } else {
     result['isUserExist'] = true;
