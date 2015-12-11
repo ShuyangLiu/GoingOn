@@ -145,10 +145,37 @@ router.get('/profile',function(request,response){
     {
         console.log('[DEBUG] from profile:Session.username: '+sess.username);
         var user = User.getUserUsingUsername(sess.username);
+
+        var user_id = user['uid'];
+
         if(user.userGroupId == 1){
            var allActivities = Activity.getAllActivities();
-           console.log('[DEBUG] all activities: '+allActivities);
-          response.render('accounts/profile.html',{'activities':allActivities});
+
+           allActivities.forEach(function( activity )
+           {
+             console.log('[DEBUG] enter the for activity loop');
+             var user_activity = {
+               'uid' : user_id,
+               'activity_id':activity['activity_id']
+             };
+
+             var exist = Activity.user_activity_exist(user_activity);
+
+             if (exist) {
+               console.log('[DEBUG] This is an Unbookmark');
+               activity['bookmark'] = 'Unbookmark';
+             } else {
+               console.log('[DEBUG] This is an Bookmark');
+               activity['bookmark'] = 'Bookmark';
+             }
+             console.log('[DEBUG] [profile] : activity[activity_name]: '+activity['activity_name']);
+           });
+
+           console.log('[DEBUG] [profile]:all activities: '+allActivities);
+          response.render('accounts/profile.html',
+          {
+            'activities':allActivities,
+          });
         }else if(user.userGroupId == 2){
           response.render('accounts/group_home.html');
         }
@@ -171,6 +198,41 @@ router.get('/posted_event',function(request,response){
     response.redirect('/home');
   }
 });
+
+router.post('/bookmark.action',function(request,response){
+  var sess = request.session;
+  var user = User.getUserUsingUsername(sess.username);
+  var activity_id = request.body.activity_id;
+  var user_id = user['uid'];
+
+  var user_activity = {
+    'uid'         : user_id,
+    'activity_id' : activity_id
+  };
+
+  var result = {
+    'isSuccessful'  : false,
+    'activity_id'   : activity_id,
+    'bookmark'      : true
+  };
+
+  //check if the event is already bookmarked by the user
+  var exist = Activity.user_activity_exist(user_activity);
+
+  if (exist) {
+    user_activity           = Activity.user_activity_delete(user_activity);
+    result['bookmark']      = false;
+    result['isSuccessful']  = true;
+  }else {
+    user_activity           = Activity.user_activity_insert(user_activity);
+    result['bookmark']      = true;
+    result['isSuccessful']  = true;
+  }
+
+  response.json(result);
+
+});
+
 
 router.get('/logout',function(request,response){
     console.log('[DEBUG] get a logout request!');

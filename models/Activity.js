@@ -46,6 +46,79 @@ exports.createNewEvent = function(NewEvent){
       return NewEvent;
 }
 
+exports.user_activity_insert = function(user_activity){
+  var fiber = fibers.current;
+  var user_activity_link = null;
+
+  connection.query({
+    sql: 'INSERT INTO `go_user_activity` (`uid`,`activity_id`)VALUES(?,?)',
+    timeout:30000,
+  },[
+      user_activity['uid'],
+      user_activity['activity_id']
+    ],function(error,result)
+    {
+      if ( error )
+      {
+          throw error;
+      }
+      fiber.run();
+  });
+
+  fibers.yield();
+  return user_activity;
+
+}
+
+//TODO: check if the user_activity exist
+exports.user_activity_exist = function(user_activity){
+  var fiber = fibers.current;
+  var userActivityExist = false;
+
+  connection.query({
+    sql: 'SELECT * FROM `go_user_activity` WHERE `uid` = ? AND `activity_id` = ?',
+    timeout: 30000,
+  },[
+    user_activity['uid'],
+    user_activity['activity_id'],
+  ],function(error,rows,fields){
+    if ( error )
+    {
+        throw error;
+    }
+    if (rows.length == 0) {
+      userActivityExist = false;
+    }else {
+      userActivityExist = true;
+    }
+    fiber.run();
+  });
+
+  fibers.yield();
+  return userActivityExist;
+}
+
+//TODO: delete a row of user_activity
+exports.user_activity_delete = function(user_activity){
+  var fiber = fibers.current;
+  connection.query({
+    sql: 'DELETE FROM `go_user_activity` WHERE `uid` = ? AND `activity_id` = ?',
+    timeout: 30000,
+  },[
+    user_activity['uid'],
+    user_activity['activity_id']
+  ],function(error,result){
+    if ( error )
+    {
+        throw error;
+    }
+      fiber.run();
+  });
+
+  fibers.yield();
+  return user_activity;
+}
+
 //return all activities in the Database
 exports.getAllActivities = function(){
   var fiber = fibers.current;
@@ -63,12 +136,13 @@ exports.getAllActivities = function(){
     for (var i=0; i<rows.length; i++) {
       console.log(i);
       activity = {
-          activity_name: rows[i]['activity_name'],
-          activity_time: rows[i]['activity_time'],
-          activity_type: rows[i]['activity_type'],
-          activity_location: rows[i]['activity_location'],
+          activity_name       : rows[i]['activity_name'],
+          activity_time       : rows[i]['activity_time'],
+          activity_type       : rows[i]['activity_type'],
+          activity_location   : rows[i]['activity_location'],
           activity_description: rows[i]['activity_description'],
-          activity_group: rows[i]['activity_group']
+          activity_id         : rows[i]['activity_id'],
+          activity_group      : rows[i]['activity_group']
       };
       console.log('[DEBUG]activity: \n');
       console.log(activity);
@@ -108,10 +182,10 @@ exports.getPostedActivities = function(username){
           activity_description: rows[i]['activity_description'],
           activity_group: rows[i]['activity_group']
       };
-      console.log('[DEBUG]activity: \n');
+      console.log('[DEBUG]posted activity: \n');
       console.log(activity);
       allActivities.push(activity);
-      console.log('[DEBUG]allActivities: \n');
+      console.log('[DEBUG]posted allActivities: \n');
       console.log(allActivities);
     }
 

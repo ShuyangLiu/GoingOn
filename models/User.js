@@ -41,6 +41,7 @@ exports.getUserUsingUsername = function(username) {
                 username: results[0]['username'],
                 password: results[0]['password'],
                 email: results[0]['email'],
+                uid : results[0]['uid'],
                 userGroupId: results[0]['user_group_id']
             }
         }
